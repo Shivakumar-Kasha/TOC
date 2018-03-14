@@ -1,0 +1,155 @@
+/**
+ * @Date:   01-27-2017 13:01:29
+ * @Project: 24/7PizzaBOX
+ * @Last modified time: 09-01-2017 11:31:33
+ * @Copyright: 2017, Kii Corporation www.kii.com
+ */
+
+/* Brand Color */
+.brand-color {
+    color: #01427a;
+}
+
+.btn.btn-brand-color {
+  background-color: #01427a;
+  color: white;
+  border-color: #01427a;
+}
+
+.btn.btn-brand-color:hover, .btn.btn-brand-color:active, .btn.btn-brand-color.active {
+  background-color: #01427a;
+  border-color: #01427a;
+  color: white;
+}
+
+.btn.btn-brand-color:active, .btn.btn-brand-color.active {
+  background-color: #01427a;
+  border-color: #01427a;
+}
+
+.text-brand-half {
+    color: #337ab7;
+}
+
+
+/* buttons */
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+}
+
+.btn-circle.btn-lg {
+    width: 50px;
+    height: 50px;
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.33;
+    border-radius: 25px;
+}
+
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    font-size: 24px;
+    line-height: 1.33;
+    border-radius: 35px;
+}
+
+
+/* modal */
+
+.modal-fit .modal-dialog {
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    padding: 10px;
+}
+
+.modal-fit .modal-body {
+    max-height: calc(100vh - 200px);
+    overflow: auto;
+}
+
+.pac-container {
+    z-index: 100000;
+}
+
+
+/* font-awesome asterick */
+
+.fa-asterisk {
+    font-size: 5px;
+}
+
+.inline-text {
+    display: inline-block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+}
+
+.form-group.required label:after {
+  content: "*";
+  color: #d9534f;
+  font-weight: bold;
+}
+
+.vertical-center {
+    /* Make it a flex container */
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    /* Align the bootstrap's container vertically */
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -moz-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    /* In legacy web browsers such as Firefox 9
+     we need to specify the width of the flex container */
+    width: 100%;
+    /* Also 'margin: 0 auto' doesn't have any effect on flex items in such web browsers
+     hence the bootstrap's container won't be aligned to the center anymore.
+
+     Therefore, we should use the following declarations to get it centered again */
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+}
+
+.morris-hover {
+  position:absolute;
+  z-index:10;
+}
+.capitalize {
+  display: inline-block;
+}
+.intl-tel-input {
+  width: 100%;
+}
+.capitalize:first-letter {
+  text-transform: capitalize;
+}
+a {
+    text-decoration: none !important;
+}
+
+.iti-flag {background-image: url("../images/flags.png");}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+  .iti-flag {background-image: url("../images/flags@2x.png");}
+}

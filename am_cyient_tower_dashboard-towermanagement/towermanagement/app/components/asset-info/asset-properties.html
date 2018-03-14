@@ -1,0 +1,29 @@
+<!--
+@Date: 02-16-2017 11:02:19
+@Project: Asset Monitroing
+@Last modified time: 04-18-2017 20:04:52
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+
+
+
+<section class="tile tile-simple table-custom mb-0" ng-controller="ShowPropertiesDetailCtrl as propertiesInfo">
+
+  <br>
+  <div class="table-responsive ">
+    <table width="100% " datatable=" " dt-options="propertiesInfo.dtOptions " dt-column-defs="propertiesInfo.dtColumnDefs" dt-columns="propertiesInfo.dtColumns " dt-instance="propertiesInfo.dtInstance " class="table table-custom ">
+      <thead>
+        <tr>
+          <th>{ 'LABELS.LABEL' | translate }}</th>
+          <th>{{ 'LABELS.TYPE' | translate }}</th>
+          <th>{{ 'LABELS.HINT_TEXT' | translate }}</th>
+          <th>Value</th>
+          <th>Required</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+</section>

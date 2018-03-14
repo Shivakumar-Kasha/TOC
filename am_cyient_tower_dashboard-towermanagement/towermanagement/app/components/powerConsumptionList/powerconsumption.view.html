@@ -1,0 +1,174 @@
+<!--
+
+@Date:   03-04-2017
+@Project:AssetMonitoring
+@Filename: powerConsumptions.view.html
+@Last modified by:   santhosh
+@Last modified time: 04-07-2017 12:14:51
+@Copyright: @Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+
+
+<div class="page page-datatables">
+
+  <!-- page content -->
+  <div class="pagecontent">
+
+
+    <!-- row -->
+    <div class="row">
+      <!-- col -->
+      <div class="col-md-12">
+
+        <!-- Filter Prompt -->
+
+        <script type="text/ng-template" id="filterPrompt.html">
+          <div class="modal-header">
+            <h3 class="modal-title custom-font"><strong>{{ 'LABELS.FILTER' | translate }}</strong></h3>
+          </div>
+          <div class="modal-body">
+            <form name="assetForm" ng-submit="submit()">
+
+              <div class="row">
+                <div ng-show="{{showMaster}}" class="form-group col-md-6">
+                  <label for="name">{{ 'LABELS.TENANT' | translate }}: </label>
+                  <select chosen="{width: '100%'}" class="form-control" ng-model="filter.tenantID" data-placeholder-text-single="'All'" no-results-text="'Could not find tenants'" ng-options="tenant._customInfo.c_id as tenant._customInfo.c_name for tenant in tenants | orderBy:'_customInfo.c_name'">
+                                  <option value="">{{ 'LABELS.ALL' | translate }}</option>
+                              </select>
+                </div>
+                <!-- <div class="form-group col-md-6">
+                  <label for="assetlocation">{{ 'Menu.ASSETTYPE' | translate }} {{ 'LABELS.LOCATION' | translate }}: </label>
+                  <input type="text" name="assetlocation" id="assetlocation" placeholder="{{ 'PLACE_HOLDERS.ENTER' | translate }} {{ 'Menu.ASSETTYPE' | translate }} {{ 'LABELS.LOCATION' | translate }} {{'PLACE_HOLDERS.CASE_SENSITIVE_WITH_BRACES' | translate}} " class="form-control"
+                    ng-model="filter.assetLocation">
+
+                </div> -->
+                <div ng-show="{{showMaster}}" class="form-group col-md-6">
+                  <label for="name">{{ 'LABELS.TOWER' | translate }}: </label>
+                  <select chosen="{width: '100%'}" class="form-control" ng-model="filter.towerID" data-placeholder-text-single="'All'" no-results-text="'Could not find towers'" ng-options="tower.asset_id as tower.name for tower in towers | orderBy:'name'">
+                                  <option value="">{{ 'LABELS.ALL' | translate }}</option>
+                              </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label for="from">From:</label>
+                  <div style="width: 100%;" class="input-group w-md">
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="filter.fromDate" is-open="fromOpened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                    <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event, 'from')"><i class="glyphicon glyphicon-calendar"></i></button>
+                          </span>
+                  </div>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="to">To:</label>
+                  <div style="width: 100%;" class="input-group w-md">
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="filter.toDate" is-open="toOpened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                    <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event, 'to')"><i class="glyphicon glyphicon-calendar"></i></button>
+                          </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="row">
+                <div class="form-group col-md-6">
+                  <label for="address">{{ 'LABELS.ADDRESS' | translate }}:</label>
+                  <input type="text" class="form-control" id="address" ng-model="filter.address" placeholder="Address" autocomplete="on" googleplace/>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="radius">{{(filter.radius === 100)?('LABELS.EVERYWHERE' | translate):('LABELS.RADIUS_MI' | translate).replace('###', filter.radius)}}</label>
+                  <br/>
+                  <input style="width: 100%;" id="slider" ui-jq="slider" ui-event="{slideStop: 'updateModel($event)'}" ui-options="{
+                                    min: 1,
+                                    max: 100,
+                                    step: 1,
+                                    value: {{filter.radius}}
+                                }" class="slider slider-horizontal form-control" type="text">
+                </div>
+              </div> -->
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="filterData()"><i class="fa fa-arrow-right"></i>{{ 'LABELS.FILTER' | translate }}</button>
+            <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{ 'BUTTONS.CANCEL' | translate }}</button>
+          </div>
+          </form>
+        </script>
+        <!-- /Filter  Prompt -->
+
+        <!-- tile -->
+        <section class="tile" fullscreen="isFullscreen02">
+
+          <!-- tile header -->
+          <div class="tile-header dvd dvd-btm">
+            <h1 class="custom-font"></h1>
+            <a href ng-click="openFilter()"><h3><i class="fa fa-filter"></i>&nbsp;<strong>{{ 'LABELS.FILTER' | translate }}</strong></h3></a>
+            <a style="float:right; margin-right:35px;" href="" ng-click="resetAlertFilter()"><i class="fa fa-undo" aria-hidden="true"></i>&nbsp;<h3 class="custom-font"><strong>{{ 'LABELS.RESET' | translate }}</strong></h3></a>
+            <ul class="controls">
+              <li class="dropdown" uib-dropdown on-toggle="toggled(open)">
+
+                <a href uib-dropdown-toggle class="dropdown-toggle settings"><i class="fa fa-cog"></i></a>
+
+                <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+                  <li>
+                    <a href tile-control-toggle>
+                          <span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.MINIMIZE' | translate }}</span>
+                          <span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.EXPAND' | translate }}</span>
+                        </a>
+                  </li>
+                  <li>
+                    <a href ng-click="alertInfo.dtInstance.reloadData()">
+                      <fa name="refresh"></fa> {{ 'LABELS.REFRESH' | translate }}
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-fullscreen ng-click="isFullscreen02 = !isFullscreen02">
+                      <fa name="expand"></fa> {{ 'LABELS.FULL_SCREEN' | translate }}
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-lightbox>
+                      <fa name="magnet"></fa> {{ 'LABELS.OPEN_IN_LIGHTBOX' | translate }}
+                    </a>
+                  </li>
+                </ul>
+
+              </li>
+            </ul>
+          </div>
+          <!-- /tile header -->
+
+          <!-- tile body -->
+          <div class="tile-body table-custom">
+            <div class="table-responsive">
+              <table width="100%" datatable="" dt-options="powerConsumptionInfo.dtOptions" dt-columns="powerConsumptionInfo.dtColumns" dt-instance="powerConsumptionInfo.dtInstance" class="table table-custom">
+                <thead>
+                  <tr>
+                    <th class="bt-0">{{'LABELS.TENANT_NAME' | translate}}</th>
+                    <th width="20%" class="bt-0">{{ 'LABELS.TOWER_NAME' | translate }}</th>
+                    <th class="bt-0">{{ 'LABELS.DG_POWER' | translate }}</th>
+                    <th class="bt-0">{{ 'LABELS.GP_POWER' | translate }}</th>
+                    <!-- <th class="bt-0">{{ 'LABELS.ALERT' | translate }}</th> -->
+                    <!-- <th class="bt-0">{{'LABELS.UPDATED_AT' | translate}}</th> -->
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
+          <!-- /tile body -->
+
+        </section>
+        <!-- /tile -->
+      </div>
+      <!-- /col -->
+    </div>
+    <!-- /row -->
+
+  </div>
+  <!-- /page content -->
+
+
+
+
+</div>

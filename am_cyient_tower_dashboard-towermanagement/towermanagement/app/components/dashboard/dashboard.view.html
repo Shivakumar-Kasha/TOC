@@ -1,0 +1,658 @@
+<!--
+@Date:   02-24-2017 17:02:92
+@Project: 24/7PizzaBOX
+@Last modified time: 04-20-2017 18:04:08
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<div class="page page-datatables">
+  <!-- page content -->
+  <div class="pagecontent">
+    <!-- row -->
+    <div class="row">
+      <!-- col -->
+      <div class="col-md-12">
+        <!-- delete asset prompt -->
+        <script type="text/ng-template" id="deleteAssetPrompt.html">
+          <div class="modal-header">
+            <h3 class="modal-title custom-font"><strong>{{'CRUD.DELETE' | translate}}</strong>&nbsp;{{ 'LABELS.ASSET' | translate }}</h3>
+          </div>
+          <div class="modal-body text-center">
+            <p class="text-danger"><strong>{{('INFO.DELETE_ASSET' | translate)}}</strong></p>
+            <div class="row"><strong>{{'LABELS.NAME' | translate }}: </strong> {{assetNameToDelete}}</div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="deleteAsset()"><i class="fa fa-arrow-right"></i> {{ 'CRUD.DELETE' | translate }}</button>
+            <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{ 'BUTTONS.CANCEL' | translate }}</button>
+          </div>
+        </script>
+        <!-- /delete asset prompt -->
+        <!-- Filter Prompt -->
+        <script type="text/ng-template" id="dashboardFilterPrompt.html">
+          <div class="modal-header">
+            <h3 class="modal-title custom-font"><strong>{{ 'LABELS.FILTER' | translate }}</strong></h3>
+          </div>
+          <div class="modal-body">
+            <form name="assetForm" ng-submit="submit()">
+              <div class="row">
+                <div ng-show="{{showMaster}}" class="form-group col-md-12">
+                  <label for="name">{{ 'LABELS.TENANT' | translate }}: </label>
+                  <select chosen="{width: '100%'}" class="form-control" ng-model="filter.tenantId" data-placeholder-text-single="'All'" no-results-text="'Could not find tenants'" ng-options="tenant._customInfo.c_id as tenant._customInfo.c_name for tenant in tenants | orderBy:'_customInfo.c_name'">
+                                  <option value="">{{ 'LABELS.ALL' | translate }}</option>
+                              </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label for="show">{{ 'LABELS.STATUS' | translate }}:</label>
+                  <select class="form-control" id="status" ng-options="a.option as a.view for a in statusOptions | orderBy:'view'" ng-model="filter.status">
+                                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="name">{{ 'LABELS.MODEL' | translate }}: </label>
+                  <select chosen="{width: '100%'}" class="form-control" ng-model="filter.model" data-placeholder-text-single="'All'" no-results-text="'Could not find models'" ng-options="model._customInfo.c_id as model._customInfo.c_name for model in models | orderBy:'_customInfo.c_name'">
+                                        <option value="">{{ 'LABELS.ALL' | translate }}</option>
+                                    </select>
+                </div>
+                <!-- <div class="form-group col-md-4">
+                                    <label for="show">Connectivity:</label>
+                                    <select class="form-control" id="connecticity" ng-options="a.option as a.view for a in connectivityOptions" ng-model="filter.connectivity">
+                                    </select>
+                                </div> -->
+              </div>
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label for="address">{{ 'LABELS.ADDRESS' | translate }}:</label>
+                  <input type="text" class="form-control" id="address" ng-model="filter.address" placeholder="Address" autocomplete="on" googleplace/>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="radius">{{(filter.val === 100)?('LABELS.EVERYWHERE' | translate):('LABELS.RADIUS_MI' | translate).replace('###', filter.val)}}</label>
+                  <br/>
+                  <input style="width: 100%;" id="slider" ui-jq="slider" ui-event="{slideStop: 'updateModel($event)'}" ui-options="{
+                                    min: 1,
+                                    max: 100,
+                                    step: 1,
+                                    value: {{filter.val}}
+                                }" class="slider slider-horizontal form-control" type="text">
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="filterData()"><i class="fa fa-arrow-right"></i>{{ 'LABELS.FILTER' | translate }}</button>
+            <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{ 'BUTTONS.CANCEL' | translate }}</button>
+          </div>
+          </form>
+        </script>
+        <!-- /Filter  Prompt -->
+
+		  <!-- cards row -->
+              <div class="row" ng-init="getOverView();">
+
+                <div class="card-container col-lg-2 col-sm-3 col-sm-8">
+                  <div class="card">
+                    <div class="front bg-cyan">
+
+                      <!-- row -->
+                      <div class="row">
+                        <!-- col -->
+                        <div class="col-xs-4">
+                          <i class="fa fa-users fa-3x"></i>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                        <div class="col-xs-8">
+                          <p class="text-elg text-strong mb-0">{{activeUsers}}</p>
+                          <span >Active Users</span>
+                        </div>
+                        <!-- /col -->
+                      </div>
+                      <!-- /row -->
+
+                    </div>
+                    <div class="back bg-cyan">
+
+                      <!-- row -->
+                      <div class="row">
+                        <!-- col -->
+                        <div class="col-xs-6">
+                          <a href=javascript:;><i class="fa fa-cogs fa-2x"></i> Config</a>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                        <div class="col-xs-6">
+                          <a ui-sref="app.tenants" click="onClick" href><i class="fa fa-chain-broken fa-2x"></i> Content</a>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                <!--        <div class="col-xs-4">
+                          <a href=javascript:;><i class="fa fa-ellipsis-h fa-2x"></i> More</a>
+                        </div>  -->
+                        <!-- /col -->
+                      </div>
+                      <!-- /row -->
+
+                    </div>
+                  </div>
+                </div>
+                <!-- /col -->
+
+                <div class="card-container col-lg-2 col-sm-3 col-sm-8">
+                  <div class="card">
+                    <div class="front bg-magenta">
+
+                      <!-- row -->
+                      <div class="row">
+                        <!-- col -->
+                         <div class="col-xs-4">
+                        <i class="fa fa-signal fa-3x"></i>
+                      </div>
+                        <!-- /col -->
+                        <!-- col -->
+                        <div class="col-xs-8">
+                          <p class="text-elg text-strong mb-0">{{totalTowers}}</p>
+                          <span>Total Towers</span>
+                        </div>
+                        <!-- /col -->
+                      </div>
+                      <!-- /row -->
+
+                    </div>
+                    <div class="back bg-magenta">
+
+                      <!-- row -->
+                      <div class="row">
+                        <!-- col -->
+                        <div class="col-xs-6">
+                          <a href=javascript:;><i class="fa fa-cogs fa-2x"></i> Config</a>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                        <div class="col-xs-6">
+                          <a ui-sref="app.towerinfo"><i class="fa fa-chain-broken fa-2x"></i>Content</a>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                      <!--  <div class="col-xs-4">
+                          <a href=javascript:;><i class="fa fa-ellipsis-h fa-2x"></i> More</a>
+                        </div>  -->
+                        <!-- /col -->
+                      </div>
+                      <!-- /row -->
+
+                    </div>
+                  </div>
+                </div>
+                <!-- /col -->
+
+                <!-- col -->
+                <div class="card-container col-lg-2 col-sm-3 col-sm-8">
+                  <div class="card">
+                    <div class="front bg-greensea">
+
+                      <!-- row -->
+                      <div class="row">
+                        <!-- col -->
+                        <div class="col-xs-4">
+                          <i class="fa fa-ticket fa-3x"></i>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                        <div class="col-xs-8">
+                          <p class="text-elg text-strong mb-0">{{ticketsPending}}</p>
+                          <span>Tickets Pending</span>
+                        </div>
+                        <!-- /col -->
+                      </div>
+                      <!-- /row -->
+
+                    </div>
+                    <div class="back bg-greensea">
+
+                      <!-- row -->
+                      <div class="row">
+                        <!-- col -->
+                        <div class="col-xs-6">
+                          <a href=javascript:;><i class="fa fa-cogs fa-2x"></i>Config</a>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                        <div class="col-xs-6">
+                          <a href ng-click="showNxtLvlData1('closed','neq')"><i class="fa fa-chain-broken fa-2x"></i> Content</a>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                      <!--  <div class="col-xs-4">
+                          <a href=javascript:;><i class="fa fa-ellipsis-h fa-2x"></i> More</a>
+                        </div> -->
+                        <!-- /col -->
+                      </div>
+                      <!-- /row -->
+
+                    </div>
+                  </div>
+                </div>
+                <!-- /col -->
+
+                <!-- col -->
+                <div class="card-container col-lg-2 col-sm-3 col-sm-8">
+                  <div class="card">
+                    <div class="front bg-lightred">
+
+                      <!-- row -->
+                      <div class="row">
+                        <!-- col -->
+                        <div class="col-xs-4">
+                          <i class="fa fa-ticket fa-3x"></i>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                        <div class="col-xs-8">
+                          <p class="text-elg text-strong mb-0">{{ticketsResolved}}</p>
+                          <span>Tickets Resolved</span>
+                        </div>
+                        <!-- /col -->
+                      </div>
+                      <!-- /row -->
+
+                    </div>
+                    <div class="back bg-lightred">
+
+                      <!-- row -->
+                      <div class="row">
+                        <!-- col -->
+                        <div class="col-xs-6">
+                          <a href=javascript:;><i class="fa fa-cogs fa-2x"></i> Config</a>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                        <div class="col-xs-6">
+                          <a href ng-click="showNxtLvlData1('closed')"><i class="fa fa-chain-broken fa-2x"></i> Content</a>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                        <!--  <div class="col-xs-4">
+                          <a href=javascript:;><i class="fa fa-ellipsis-h fa-2x"></i> More</a>
+                        </div>  -->
+                        <!-- /col -->
+                      </div>
+                      <!-- /row -->
+
+                    </div>
+                  </div>
+                </div>
+                <!-- /col -->
+
+                <!-- col -->
+                <div class="card-container col-lg-2 col-sm-3 col-sm-8">
+                  <div class="card">
+                    <div class="front bg-blue">
+
+                      <!-- row -->
+                      <div class="row">
+                        <!-- col -->
+                        <div class="col-xs-4">
+                          <i class="fa fa-thermometer fa-3x"></i>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                        <div class="col-xs-8">
+                          <p class="text-elg text-strong mb-0">{{overallHealth}}</p>
+                          <span>Overall Health</span>
+                        </div>
+                        <!-- /col -->
+                      </div>
+                      <!-- /row -->
+
+                    </div>
+                    <div class="back bg-blue">
+
+                      <!-- row -->
+                      <div class="row">
+                        <!-- col -->
+                        <div class="col-xs-6">
+                          <a href=javascript:;><i class="fa fa-cogs fa-2x"></i> Config</a>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                        <div class="col-xs-6">
+                          <a ui-sref="app.overallHealth"><i class="fa fa-chain-broken fa-2x"></i> Content</a>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                      <!--  <div class="col-xs-4">
+                          <a href=javascript:;><i class="fa fa-ellipsis-h fa-2x"></i> More</a>
+                        </div> -->
+                        <!-- /col -->
+                      </div>
+                      <!-- /row -->
+
+                    </div>
+                  </div>
+                </div>
+                <!-- /col -->
+
+                <!-- col -->
+                <div class="card-container col-lg-2 col-sm-3 col-sm-8">
+                  <div class="card">
+                    <div class="front bg-slategray">
+
+                      <!-- row -->
+                      <div class="row">
+                        <!-- col -->
+                        <div class="col-xs-4">
+                          <i class="fa fa-clock-o fa-3x"></i>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                        <div class="col-xs-8">
+                          <p class="text-elg text-strong mb-0">{{unattendedAlarms}}</p>
+                          <span>Unattended Alarms</span>
+                        </div>
+                        <!-- /col -->
+                      </div>
+                      <!-- /row -->
+
+                    </div>
+                    <div class="back bg-slategray">
+
+                      <!-- row -->
+                      <div class="row">
+                        <!-- col -->
+                        <div class="col-xs-6">
+                          <a href=javascript:;><i class="fa fa-cogs fa-2x"></i> Config</a>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                        <div class="col-xs-6">
+                          <a href ng-click="showNxtLvlData('Open','eq')"><i class="fa fa-chain-broken fa-2x"></i>Content</a>
+                        </div>
+                        <!-- /col -->
+                        <!-- col -->
+                    <!--    <div class="col-xs-4">
+                          <a href=javascript:;><i class="fa fa-ellipsis-h fa-2x"></i> More</a>
+                        </div> -->
+                        <!-- /col -->
+                      </div>
+                      <!-- /row -->
+
+                    </div>
+                  </div>
+                </div>
+                <!-- /col -->
+
+              </div>
+
+
+        <!-- tile -->
+        <section class="tile" fullscreen="isFullscreen02">
+          <!-- tile header -->
+          <div class="tile-header dvd dvd-btm">
+            <h1 class="custom-font"> </h1>
+            <a href ng-click="openFilter()"><h3><i class="fa fa-filter"></i>&nbsp;<strong>{{ 'LABELS.FILTER' | translate }}</strong></h3></a>
+            <label ng-show="{{showMaster}}"><strong class="text-danger">&nbsp;&nbsp;{{filter.selectedDashboardTenant}}</strong></label>
+            <a style="float:right; margin-right:35px;" href ng-click="resetDashboardFilter()"><h3><i class="fa fa-undo"></i>&nbsp;<strong>{{ 'LABELS.RESET' | translate }}</strong></h3></a>
+            <ul class="controls">
+              <li class="dropdown" uib-dropdown on-toggle="toggled(open)">
+                <a href uib-dropdown-toggle class="dropdown-toggle settings"><i class="fa fa-cog"></i></a>
+                <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+                  <li>
+                    <a href tile-control-toggle>
+                          <span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.MINIMIZE' | translate }}</span>
+                          <span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.EXPAND' | translate }}</span>
+                        </a>
+                  </li>
+                  <li>
+                    <a href ng-click="showCase.dtInstance.reloadData()">
+                      <fa name="refresh"></fa> {{ 'LABELS.REFRESH' | translate }}
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-fullscreen ng-click="isFullscreen02 = !isFullscreen02">
+                      <fa name="expand"></fa> {{ 'LABELS.FULL_SCREEN' | translate }}
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-lightbox>
+                      <fa name="magnet"></fa> {{ 'LABELS.OPEN_IN_LIGHTBOX' | translate }}
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <!-- /tile header -->
+          <!-- tile body -->
+          <div class="tile-body table-custom">
+            <div class="row">
+              <uib-tabset class="mb-20" justified="true">
+                <uib-tab>
+                  <uib-tab-heading>
+                    <fa name="map"></fa>&nbsp;{{ 'LABELS.MAP' | translate }}
+                  </uib-tab-heading>
+                  <div alert-display />
+                  <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="map.options" events="map.events" control="googlemap">
+                    <ui-gmap-markers models="map.markers" coords="'coords'" fit="true" icon="'icon'" click="onClick" options="'options'" doRebuildAll="true">
+                      <ui-gmap-windows show="windowOptions.show">
+                        <div style="overflow:hidden; width: 250px;" class="modal-body form-horizontal">
+                          <div class="form-group" ng-non-bindable>
+                            <div class="row">
+                              <label class="col-sm-6"><strong>{{ 'LABELS.NAME' | translate }} </strong></label>
+                              <div class="col-sm-6">
+                                <p class=""> {{data.name}}</p>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <label class="col-sm-6"><strong>{{ 'LABELS.STATUS' | translate }} </strong></label>
+                              <div class="col-sm-6">
+                                <p class="{{data['status-class']}}"> {{data.status}}</p>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <label class="col-sm-6"><strong>{{ 'LABELS.ADDRESS' | translate }} </strong></label>
+                              <div class="col-sm-6">
+                                <p class="inline-text" title="{{assetLocation}}">{{data.address}}</p>
+                              </div>
+                            </div>
+                            <div class="row" style="display:{{data.zoneInfo}};">
+                              <label class="col-sm-6"><strong>{{ 'LABELS.ZONE_NAME' | translate }} </strong></label>
+                              <div class="col-sm-6">
+                                <p class="inline-text" title="{{data.zoneName}}">{{data.zoneName}}</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="text-center">
+                            <a ui-sref="app.asset-info" click="onClick" href><b>{{ 'LABELS.MORE_INFO' | translate }}</b></a>
+                          </div>
+                        </div>
+                        </ui-gmap-window>
+                    </ui-gmap-markers>
+                  </ui-gmap-google-map>
+                  <!--<uib-pager total-items="totalItems" ng-model="currentPage"></uib-pager>-->
+                </uib-tab>
+                <uib-tab>
+                  <uib-tab-heading>
+                    <fa name="list"></fa>&nbsp;{{ 'LABELS.LIST' | translate }}
+                  </uib-tab-heading>
+                  <div alert-display />
+                  <div class="table-responsive">
+                    <table id="vms" name="vms" width="100%" datatable dt-options="showCase.dtOptions" dt-columns="showCase.dtColumns" dt-instance="showCase.dtInstance" class="table table-custom">
+                      <thead>
+                        <tr>
+                          <th class="bt-0">{{ 'LABELS.TENANT' | translate }}</th>
+                          <th class="bt-0">{{ 'LABELS.NAME' | translate }}</th>
+                          <th class="bt-0">{{ 'LABELS.ADDRESS' | translate }}</th>
+                          <th class="bt-0">{{ 'LABELS.LATITUDE' | translate }}</th>
+                          <th class="bt-0">{{ 'LABELS.LONGITUDE' | translate }}</th>
+                          <th class="bt-0">{{ 'LABELS.STATUS' | translate }}</th>
+                          <th class="bt-0 text-center">{{ 'LABELS.ACTION' | translate }}</th>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
+                </uib-tab>
+                <!-- <uib-tab select="loadCharts();">
+                  <uib-tab-heading>
+                    <fa name="pie-chart"></fa>&nbsp;{{ 'LABELS.CHARTS' | translate }}
+                  </uib-tab-heading>
+                  <ng-include src="chartsContentUrl"></ng-include>
+                </uib-tab> -->
+              </uib-tabset>
+            </div>
+          </div>
+          <!-- /tile body -->
+		      <!-- row -->
+    <div class="row" ng-show="{{showMaster}}">
+
+
+
+      <!-- col -->
+      <div class="col-md-12">
+        <div class="row">
+          <!-- tile -->
+          <div class="col-md-12">
+
+            <div class="tile-body">
+
+              <!-- row -->
+              <div class="row">
+                <!-- col -->
+                <div class="col-md-4" ng-init="getAlarmTrends();">
+
+                  <h5 class="" style="color:#12abeb" ng-click="showNxtLvlDataAlarms('all')">ALARM TRENDS</h5>
+                  <canvas id="line" style="height:300px;width:300px;" class="chart chart-line" chart-data="alarmtrendsdata" chart-labels="alarmtrendslabels" chart-series="series" chart-options="alarmtrendsoptions" chart-dataset-override="datasetOverride" chart-click="onClickAlarmTrends" chart-colors="colors">
+  </canvas>
+                </div>
+
+                <!-- col -->
+                <div class="col-md-4" ng-init="getTopAlerts();">
+                  <h5 class="" style="color:#12abeb" ng-click="showNxtLvlDataTopAlarmsAndAlerts('alerts')">TOP 10 ALERTS</h5>
+                  <canvas id="bar" style="height:550px;width:300px;" class="chart-horizontal-bar" chart-data="alertsData" chart-series="alertSeries" chart-options="alertsOptions" chart-labels="alertsLabels" chart-colors="colors">
+    </canvas>
+                </div>
+                <!-- /col -->
+<!--col -->
+<div class="col-md-4" ng-init="getTopAlarms();">
+  <h5 class="" style="color:#12abeb " ng-click="showNxtLvlDataTopAlarmsAndAlerts('alarms')">TOP 10 TICKETS </h5>
+  <canvas id="bar" style="height:550px;width:300px;" class="chart-horizontal-bar" chart-data="alarmsData" chart-series="alarmSeries" chart-options="alarmsOptions" chart-labels="alarmsLabels" chart-colors="colors">
+</canvas>
+</div>
+<!-- /col -->
+                <!-- col -->
+                <!-- <div class="col-md-6" ng-controller="dataMapsRegionCtrl">
+                  <h5 class="" style="color:#12abeb ">SITES BY REGION</h5>
+                  <datamap map="mapObject">
+                  </datamap>
+                </div> -->
+                <!-- /col -->
+              </div>
+              <!-- /col -->
+
+
+
+
+
+            </div>
+            <!-- /row -->
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <!-- tile -->
+            <!-- /tile header -->
+
+            <!-- tile body -->
+            <div class="tile-body">
+              <div class="row">
+                <!-- col -->
+                <div class="col-md-4" ng-init="getPowerConsumptionCatagory();">
+
+                  <h5 style="color:#12abeb; cursor: pointer;" href ui-sref="app.powerConsumptionList">POWER CONSUMPTION BY CATEGORY</h5>
+                  <!-- <div google-chart chart="myChartObject"></div> -->
+
+                  <canvas id="pie" style="height:300px;width:300px;" class="chart chart-pie chart-xs" chart-data="data" chart-labels="labels" chart-options="options">
+    </canvas>
+                </div>
+                <!-- /col -->
+                <!-- col -->
+                <div class="col-md-4" ng-init="getGpPowerVsDgPower();" >
+
+                  <h5 class="" style="color:#12abeb; cursor: pointer;" href ui-sref="app.gridPowerVsGpPower">GRID POWER VS DG POWER</h5>
+                  <!-- <div google-chart chart="myChartObject "></div> -->
+                  <canvas id="line" style="height:300px;width:300px;" class="chart chart-line" chart-data="gridData" chart-labels="gridLabels" chart-series="gridSeries" chart-options="gridOptions" chart-dataset-override="gridDataSetOverride" chart-click="onClickGpVsDg" chart-colors="gridColors">
+  </canvas>
+                </div>
+                <!-- /col -->
+                <!-- col -->
+                <div class="col-md-4" ng-init="getIntrusionsDetected();">
+                  <h5 class="" style="color:#12abeb ">INTRUSIONS DETECTED</h5>
+                  <canvas id="line" style="height:300px;width:300px;" class="chart chart-line" chart-data="intrusionsData" chart-labels="intrusionsLabels" chart-series="intrusionsSeries" chart-options="intrusionsOptions" chart-dataset-override="intrusionsDataSetOverride"
+                    chart-click="onClickIntrusions" chart-colors="intrusionColors">
+  </canvas>
+                </div>
+                <!-- /col -->
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <!-- tile -->
+            <!-- /tile header -->
+
+            <!-- tile body -->
+            <div class="tile-body">
+              <div class="row">
+                  <!-- /col -->
+                  <div class="col-md-4 " ng-init="getFireAndSmokeTrends();">
+                    <h5 class="" style="color:#12abeb" ng-click="showNxtLvlDataAlarms('Fire')">FIRE & SMOKE TRENDS</h5>
+                    <canvas id="bar" style="height:560px;width:800px;" class="chart chart-bar" chart-data="fireData" chart-series="fireSeries" chart-options="fireOptions" chart-labels="fireLabels" chart-colors="fireColors">
+  </canvas>
+                  </div>
+                  <!-- col -->
+                  <!-- col -->
+                  <div class="col-md-4" ng-init="getDgFuelConsumption();">
+                    <h5 class="" style="color:#12abeb; cursor:pointer;" href ui-sref="app.fuelConsumption">DG FUEL CONSUMPTION</h5>
+                    <canvas id="bar" style="height:280px;width:300px;" class="chart chart-bar" chart-data="FuelData" chart-series="fuelSeries" chart-options="FuelOptions" chart-labels="FuelLabels" chart-colors="colors">
+  </canvas>
+                  </div>
+
+                  <!-- col -->
+                  <div class="col-md-4" ng-init="getVoltageDCAlarms();">
+                    <h5 class="" style="color:#12abeb" ng-click="showNxtLvlDataAlarms('Voltage DC')">BATTERY STACK HEALTH - SITE WISE</h5>
+                    <canvas id="bar" style="height:280px;width:300px;" class="chart chart-bar" chart-data="BatteryData" chart-series="batterySeries" chart-options="BatteryOptions" chart-labels="BatteryLabels" chart-colors="colors">
+  </canvas>
+                  </div>
+                  <!-- /col -->
+                  <!-- col -->
+                  <!-- <div class="col-md-6 ">
+                    <h5 class="custom-font "><strong>GRID POWER VS DG POWER</strong></h5>
+
+                  </div> -->
+                </div>
+
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+        </div>
+      </div>
+    </div>
+    <!-- /col -->
+
+        </section>
+        <!-- /tile -->
+      </div>
+      <!-- /col -->
+    </div>
+    <!-- /row -->
+  </div>
+  <!-- /page content -->
+</div>

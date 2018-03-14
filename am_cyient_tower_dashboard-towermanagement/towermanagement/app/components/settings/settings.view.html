@@ -1,0 +1,152 @@
+<!--
+@Date:   01-27-2017 12:01:80
+@Project: Asset Monitoring
+@Last modified time: 04-18-2017 17:04:82
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<div class="page page-profile">
+  <!-- page content -->
+  <div class="pagecontent">
+    <!-- row -->
+    <div class="row">
+      <!-- col -->
+      <div class="col-md-12">
+        <!-- tile -->
+        <section class="tile tile-simple">
+          <!-- tile body -->
+          <div class="tile-body p-0">
+            <uib-tabset class="mb-20">
+              <uib-tab>
+                <uib-tab-heading>
+                  <i class="fa fa-user" aria-hidden="true">&nbsp;{{ 'LABELS.PROFILE' | translate }}</i>
+                </uib-tab-heading>
+                <div class="wrap-reset" ng-controller="UserProfileCtrl" ng-init="reloadData();">
+                  <form name="userForm" class="profile-settings">
+                    <div class="row">
+                      <div class="form-group col-md-12 legend">
+                        <h4><strong>{{'LABELS.PERSONAL' | translate}}</strong> {{'LABELS.SETTINGS' | translate}}</h4>
+                        <p>{{'HELP_TEXT.YOUR_PERSONAL_ACCOUNT_SETTINGS' | translate}}</p>
+                      </div>
+                    </div>
+                    <div alert-display />
+                    <div class="row">
+                      <div class="form-group col-sm-6">
+                        <label for="email">{{'LABELS.USER_NAME' | translate}}: </label>
+                        <input type="email" class="form-control" id="email" ng-model="user.userMail" readonly>
+                      </div>
+                      <div class="form-group col-sm-6">
+                        <label for="role">{{'LABELS.ROLE' | translate}}: </label>
+                        <input type="text" class="form-control" id="role" ng-model="user.userRole" readonly>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-md-6" ng-class="{ 'has-error' : userForm.userFirstName.$invalid && !userForm.userFirstName.$pristine, 'has-success' : userForm.userFirstName.$valid && !userForm.userFirstName.$pristine}" required>
+                        <label for="first-name">{{'LABELS.FIRST_NAME' | translate}}: </label>
+                        <input type="text" name="userFirstName" id="first-name" class="form-control" placeholder="Enter First Name (Mandatory)" ng-model="user.firstName">
+                        <p class="help-block">
+                          <span ng-show='userForm.userFirstName.$invalid && !userForm.userFirstName.$pristine'>{{'HELP_TEXT.FIRST_NAME_REQUIRED' | translate}}</span>
+                        </p>
+                      </div>
+                      <div class="form-group col-md-6" ng-class="{ 'has-error' : userForm.userLastName.$invalid && !userForm.userLastName.$pristine, 'has-success' : userForm.userLastName.$valid && !userForm.userLastName.$pristine}" required>
+                        <label for="last-name">{{'LABELS.LAST_NAME' | translate}}: </label>
+                        <input type="text" name="userLastName" id="last-name" class="form-control" placeholder="Enter Last Name (Mandatory)" ng-model="user.lastName">
+                        <p class="help-block">
+                          <span ng-show='userForm.userLastName.$invalid && !userForm.userLastName.$pristine'>{{'HELP_TEXT.LAST_NAME_REQUIRED' | translate}}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-6">
+                        <label for="phone">{{'LABELS.PHONE' | translate}}: </label>
+                        <br/>
+                        <input type="text" id="phone" name="phone" class="form-control" ng-model="user.phoneNumber" intl-tel-input>
+                      </div>
+                      <div class="form-group col-sm-6">
+                        <label for="avatar">{{'LABELS.AVATAR' | translate}}: </label>
+                        <div class="input-group col-md-12"> <span class="input-group-addon"><img class="size-20x20" ng-src="{{user.image?user.image:'images/user-icon.png'}}" /></span>
+                          <input ui-jq="filestyle" type="file" id="avatar" fileread="user.image" accept="image/*" class="filestyle" ui-options="{
+                                        buttonText: 'Upload Avatar',
+                                        iconName: 'fa fa-inbox'
+                                    }"> </div>
+                        <span class="help-block">{{'HELP_TEXT.ALLOWED_FILES_GIF_PNG_JPG' | translate}}</span>
+                      </div>
+                    </div>
+                    <hr/>
+                    <div class="row text-center">
+                      <div class="form-group col-md-12 legend">
+                        <button type="submit" class="btn btn-rounded btn-brand-color" ng-click="submit()" ng-disabled="userForm.$invalid">{{'BUTTONS.SAVE_CHANGE' | translate}}</button>&nbsp;&nbsp;
+                        <button type="" class="btn btn-lightred btn-rounded" ng-click="reloadData()">{{'BUTTONS.CANCEL' | translate }}</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </uib-tab>
+              <uib-tab>
+                <uib-tab-heading>
+                  <i class="fa fa-lock" aria-hidden="true">&nbsp;{{ 'LABELS.SECURITY' | translate }}</i>
+                </uib-tab-heading>
+                <div class="wrap-reset">
+                  <form name="securityForm" class="profile-settings" ng-controller="UserSecurityCtrl">
+                    <div class="row">
+                      <div class="form-group col-md-12 legend">
+                        <h4><strong>{{'LABELS.SECURITY' | translate}}</strong> {{'LABELS.SETTINGS' | translate}}</h4>
+                        <p>{{'HELP_TEXT.SECURE_YOUR_ACCOUNT' | translate}}</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-6">
+                        <label for="username">{{'LABELS.USER_NAME' | translate}}: </label>
+                        <input type="text" class="form-control" id="username" ng-model="security.userMail" readonly>
+                      </div>
+                      <div class="form-group col-sm-6" ng-class="{ 'has-error' : securityForm.currentPassword.$invalid && !securityForm.currentPassword.$pristine, 'has-success' : securityForm.currentPassword.$valid && !securityForm.currentPassword.$pristine}" required>
+                        <label for="currentPassword">{{'LABELS.CURRENT_PASSWORD' | translate}}: </label>
+                        <input type="password" class="form-control" name="currentPassword" id="currentPassword" placeholder="Enter Current Password (Mandatory)" ng-model="security.currentPassword">
+                        <p class="help-block">
+                          <span ng-show="securityForm.currentPassword.$error.minlength">{{'HELP_TEXT.PASSWORD_TOO_SHORT' | translate}}</span>
+                          <span ng-show="securityForm.currentPassword.$error.maxlength">{{'HELP_TEXT.PASSWORD_TOO_LONG' | translate}}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-md-6" ng-class="{ 'has-error' : securityForm.newPassword.$invalid && !securityForm.newPassword.$pristine, 'has-success' : securityForm.newPassword.$valid && !securityForm.newPassword.$pristine}" required>
+                        <label for="newPassword">{{'LABELS.NEW_PASSWORD' | translate}}:  </label>
+                        <input type="password" name="newPassword" id="newPassword" class="form-control" placeholder="Enter New Password (Mandatory)" ng-model="security.newPassword" ng-minlength="4">
+                        <p class="help-block">
+                          <span ng-show="securityForm.newPassword.$error.minlength">{{'HELP_TEXT.PASSWORD_TOO_SHORT' | translate}}</span>
+                          <span ng-show="securityForm.newPassword.$error.maxlength">{{'HELP_TEXT.PASSWORD_TOO_LONG' | translate}}</span>
+                        </p>
+                      </div>
+                      <div class="form-group col-md-6" ng-class="{ 'has-error' : securityForm.confirmNewPassword.$invalid && !securityForm.confirmNewPassword.$pristine, 'has-success' : securityForm.confirmNewPassword.$valid && !securityForm.confirmNewPassword.$pristine}" required>
+                        <label for="confirmNewPassword">{{'LABELS.CONFIRM_NEW_PASSWORD' | translate}}: </label>
+                        <input type="password" name="confirmNewPassword" id="confirmNewPassword" class="form-control" placeholder="{{ ('PLACE_HOLDERS.CONFIRM_NEW_PASSWORD' | translate) + ' ' +  ('PLACE_HOLDERS.MANDATORY' | translate)}}" ng-model="security.confirmNewPassword"
+                          ng-minlength="4" ng-maxlength="50" ui-validate=" '$value==security.newPassword' " ui-validate-watch=" 'security.newPassword' ">
+                        <p class="help-block">
+                          <span ng-show='securityForm.confirmNewPassword.$error.validator'>{{'HELP_TEXT.PASSWORD_NOT_MATCH' | translate}}</span>
+                          <span ng-show="securityForm.confirmNewPassword.$error.minlength">{{'HELP_TEXT.PASSWORD_TOO_SHORT' | translate}}</span>
+                          <span ng-show="securityForm.confirmNewPassword.$error.maxlength">{{'HELP_TEXT.PASSWORD_TOO_LONG' | translate}}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <hr/>
+                    <div class="row text-center">
+                      <div class="form-group col-md-12 legend">
+                        <button type="submit" class="btn btn-rounded btn-brand-color" ng-click="resetPassword()" ng-disabled="securityForm.$invalid">{{ 'BUTTONS.UPDATE_PASSWORD' | translate }}</button>&nbsp;&nbsp;
+                        <button type="" class="btn btn-lightred btn-rounded" ng-click="cancel()">{{ 'BUTTONS.CANCEL' | translate }}</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </uib-tab>
+            </uib-tabset>
+          </div>
+          <!-- /tile body -->
+        </section>
+        <!-- /tile -->
+      </div>
+      <!-- /col -->
+    </div>
+    <!-- /row -->
+  </div>
+  <!-- /page content -->
+</div>

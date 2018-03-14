@@ -1,0 +1,193 @@
+<!--
+@Date:   01-27-2017 12:01:22
+@Project: AssetMonitoring
+@Last modified time: 04-12-2017 12:04:86
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<div class="page page-datatables">
+  <script type="text/ng-template" id="addTenantsContent.html">
+    <form name="tenantForm" role="form" novalidate>
+      <div class="modal-header">
+        <h3 class="modal-title custom-font">
+          <strong>{{Add_or_Edit_Tenant}}</strong>&nbsp;{{ 'LABELS.TENANT' | translate }}</h3>
+      </div>
+      <div class="modal-body">
+        <div alert-display></div>
+        <fieldset>
+          <legend><strong>{{ 'LABELS.TENANT_INFORMATION' | translate }}</strong></legend>
+          <div class="row">
+            <div class="form-group col-md-6" ng-class="{ 'has-error' : tenantForm.tenantName.$invalid && !tenantForm.tenantName.$pristine, 'has-success' : tenantForm.tenantName.$valid && !tenantForm.tenantName.$pristine}" required>
+              <label for="tenantName">{{ 'LABELS.NAME' | translate }}: </label>
+              <input type="text" name="tenantName" id="tenantName" placeholder="{{ ('PLACE_HOLDERS.ENTER_NAME' | translate) + ' ' +  ('PLACE_HOLDERS.MANDATORY' | translate)}}" class="form-control" ng-model="tenant.tenantName" focus-me="true">
+              <p class="help-block">
+                <span ng-show="tenantForm.tenantName.$invalid && !tenantForm.tenantName.$pristine">{{ 'HELP_TEXT.ENTER_NAME' | translate }}</span>
+              </p>
+            </div>
+            <div class="form-group col-md-6">
+              <label class="control-label">{{ 'LABELS.LOGO' | translate }}: </label>
+              <div class="input-group col-md-12"> <span class="input-group-addon"><img class="size-20x20" ng-src="{{tenant.c_image?tenant.c_image:'images/image-icon.png'}}" /></span>
+                <input ui-jq="filestyle" type="file" id="avatar" fileread="tenant.c_image" accept="image/*" class="filestyle" ui-options="{
+                                        buttonText: '{{ 'BUTTONS.UPLOAD_LOGO' | translate }}',
+                                        iconName: 'fa fa-inbox'
+                                    }"> </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-12">
+              <label for="tenantAddress">{{ 'LABELS.ADDRESS' | translate }}: </label>
+              <input type="text" name="tenantAddress" id="tenantAddress" placeholder="{{ ('PLACE_HOLDERS.ENTER_ADDRESS' | translate) + ' ' +  ('PLACE_HOLDERS.OPTIONAL' | translate)}}" class="form-control" ng-model="tenant.tenantAddress" autocomplete="on" googleplace>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend><strong>{{ 'LABELS.TENANT_ADMIN_INFORMATION' | translate }}</strong></legend>
+          <div class="row">
+            <div class="form-group col-md-12" ng-class="{ 'has-error' : tenantForm.username.$invalid && !tenantForm.username.$pristine, 'has-success' : tenantForm.username.$valid && !tenantForm.username.$pristine}" required>
+              <label for="username">{{ 'LABELS.USER_NAME' | translate }}: </label>
+              <input type="text" name="username" id="username" placeholder="{{ ('PLACE_HOLDERS.ENTER_VALID_EMAIL' | translate) + ' ' +  ('PLACE_HOLDERS.MANDATORY' | translate)}}" class="form-control" ng-model="user.username" ng-change="user.sendMailTo = user.username"
+                ng-pattern="emailPattern" ng-readonly="{{readOnly}}">
+              <p class="help-block">
+                <span ng-show="tenantForm.username.$invalid && !tenantForm.username.$pristine">{{ 'HELP_TEXT.VALID_EMAIL' | translate }}</span>
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6" ng-class="{ 'has-error' : tenantForm.userFirstName.$invalid && !tenantForm.userFirstName.$pristine, 'has-success' : tenantForm.userFirstName.$valid && !tenantForm.userFirstName.$pristine}" required>
+              <label for="First Name">{{ 'LABELS.FIRST_NAME' | translate }}: </label>
+              <input type="text" name="userFirstName" id="userFirstName" placeholder="{{ ('PLACE_HOLDERS.ENTER_FIRST_NAME' | translate) + ' ' +  ('PLACE_HOLDERS.MANDATORY' | translate)}}" class="form-control" ng-model="user.firstName" focus-me={{focusFirstName}}>
+              <p class="help-block">
+                <span ng-show='tenantForm.userFirstName.$invalid && !tenantForm.userFirstName.$pristine'>{{ 'HELP_TEXT.FIRST_NAME_REQUIRED' | translate }}</span>
+              </p>
+            </div>
+            <div class="form-group col-md-6" ng-class="{ 'has-error' : tenantForm.userLastName.$invalid && !tenantForm.userLastName.$pristine, 'has-success' : tenantForm.userLastName.$valid && !tenantForm.userLastName.$pristine}" required>
+              <label for="Last Name">{{ 'LABELS.LAST_NAME' | translate }}: </label>
+              <input type="text" name="userLastName" id="userLastName" placeholder="{{ ('PLACE_HOLDERS.ENTER_LAST_NAME' | translate) + ' ' +  ('PLACE_HOLDERS.MANDATORY' | translate)}}" class="form-control" ng-model="user.lastName">
+              <p class="help-block">
+                <span ng-show='tenantForm.userLastName.$invalid && !tenantForm.userLastName.$pristine'>{{ 'HELP_TEXT.LAST_NAME_REQUIRED' | translate }}</span>
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label class="checkbox-inline checkbox-custom-alt">
+                     <input type="checkbox" ng-change="generateRandomPassword()" ng-model="isGenerateChecked" ng-init="generateRandomPassword()"><i></i>
+                     {{ 'CHECK_LIST.AUTO_GENERATE_PASSWORD' | translate }}
+                   </label>
+            </div>
+            <div class="form-group col-md-6">
+              <label class="checkbox-inline checkbox-custom-alt">
+                     <input type="checkbox" ng-model="isShowPasswordChecked" ng-change="hideShowPassword()"><i></i>
+                     {{ 'CHECK_LIST.SHOW_PASSWORD' | translate }}
+                   </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group {{(isPasswordMandatory === true)? 'required' : '' }} col-md-6" ng-class="{ 'has-error' : tenantForm.password.$invalid && !tenantForm.password.$pristine, 'has-success' : tenantForm.password.$valid && !tenantForm.password.$pristine}">
+              <label for="password">{{ 'LABELS.PASSWORD' | translate }}: </label>
+              <input type="{{type}}" name="password" id="password" placeholder="{{ ('PLACE_HOLDERS.ENTER_NEW_PASSWORD' | translate) + ' ' +  mandatory_or_optional}}" class="form-control" ng-model="user.password" ng-required="isPasswordMandatory" ng-minlength="4" autocomplete="off">
+              <p class="help-block">
+                <span ng-show="tenantForm.password.$invalid && !tenantForm.password.$pristine">{{ 'HELP_TEXT.PASSWORD_REQUIRED' | translate }}</span>
+                <span ng-show="tenantForm.password.$error.minlength">{{ 'HELP_TEXT.PASSWORD_TOO_SHORT' | translate }}</span>
+              </p>
+            </div>
+            <div class="form-group {{(isPasswordMandatory === true)? 'required' : '' }} col-md-6" ng-class="{ 'has-error' : tenantForm.passwordConfirm.$invalid && !tenantForm.passwordConfirm.$pristine, 'has-success' : tenantForm.passwordConfirm.$valid && !tenantForm.passwordConfirm.$pristine}">
+              <label for="passwordConfirm">{{ 'LABELS.CONFIRM_PASSWORD' | translate }}: </label>
+              <input type="{{type}}" name="passwordConfirm" id="passwordConfirm" placeholder="{{ ('PLACE_HOLDERS.CONFIRM_NEW_PASSWORD' | translate) + ' ' +  mandatory_or_optional}}" class="form-control" ng-model="user.passwordConfirm" ng-required="isPasswordMandatory"
+                ui-validate=" '$value==user.password' " ui-validate-watch=" 'user.password' " autocomplete="off">
+              <p class="help-block">
+                <span ng-show='tenantForm.passwordConfirm.$error.validator'>{{ 'HELP_TEXT.PASSWORD_NOT_MATCH' | translate }}</span>
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-12" ng-class="{ 'has-error' : tenantForm.sendMailTo.$invalid && !tenantForm.sendMailTo.$pristine, 'has-success' : tenantForm.sendMailTo.$valid && !tenantForm.sendMailTo.$pristine}" ng-hide="user.password === ''">
+              <label for="sendMailTo">{{ 'LABELS.EMAIL_PASSWORD_TO' | translate }}: </label>
+              <input type="text" name="sendMailTo" id="sendMailTo" placeholder="{{ ('PLACE_HOLDERS.ENTER_VALID_EMAIL' | translate) + ' ' +  ('PLACE_HOLDERS.OPTIONAL' | translate)}}" class="form-control" ng-model="user.sendMailTo" ng-pattern="emailPattern">
+              <p class="help-block">
+                <span ng-show="tenantForm.sendMailTo.$invalid && !tenantForm.sendMailTo.$pristine">{{ 'HELP_TEXT.VALID_EMAIL' | translate }}</span>
+              </p>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="submitTanantInfo(tenantForm.$valid)" ng-disabled="tenantForm.$invalid"><i class="fa fa-arrow-right"></i>{{Add_or_Update}}</button>
+        <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{ 'BUTTONS.CANCEL' | translate }}</button>
+      </div>
+    </form>
+  </script>
+  <!-- Delete Prompt -->
+  <script type="text/ng-template" id="deletePrompt.html">
+    <div class="modal-header">
+      <h3 class="modal-title custom-font"><strong>{{'CRUD.DELETE' | translate}}</Strong>&nbsp;{{ 'LABELS.TENANT' | translate }}</h3>
+    </div>
+    <div class="modal-body text-center">
+      <p class="text-danger"><strong>{{('INFO.DELETE_TENANT' | translate)}}</strong></p>
+      <div class="row"><strong>{{ 'LABELS.NAME' | translate }}: </strong> {{deleteTenantName}}</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="deleteUser()"><i class="fa fa-arrow-right"></i> {{ 'CRUD.DELETE' | translate }}</button>
+      <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{ 'BUTTONS.CANCEL' | translate }}</button>
+    </div>
+  </script>
+  <!-- /Delete Prompt -->
+  <!-- page content -->
+  <div class="pagecontent">
+    <!-- tile -->
+    <section class="tile" fullscreen="isFullscreen01">
+      <!-- tile header -->
+      <div class="tile-header dvd dvd-btm">
+        <a href="" ng-click="addTenant()"><h3><i class="fa fa-plus"></i><strong>&nbsp;{{ 'CRUD.ADD' | translate }}</strong>&nbsp;{{ 'LABELS.TENANT' | translate }}</h3></a>
+
+        <ul class="controls">
+          <li class="dropdown" uib-dropdown on-toggle="toggled(open)">
+            <a href uib-dropdown-toggle class="dropdown-toggle settings"><i class="fa fa-cog"></i></a>
+            <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+              <li>
+                <a href tile-control-toggle>
+                      <span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.MINIMIZE' | translate }}</span>
+                      <span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.EXPAND' | translate }}</span>
+                    </a>
+              </li>
+              <li>
+                <a href ng-click="showCaseTenants.dtInstance.reloadData()">
+                  <fa name="refresh"></fa> {{ 'LABELS.REFRESH' | translate }}
+                </a>
+              </li>
+              <li>
+                <a href tile-control-fullscreen ng-click="isFullscreen02 = !isFullscreen02">
+                  <fa name="expand"></fa> {{ 'LABELS.FULL_SCREEN' | translate }}
+                </a>
+              </li>
+              <li>
+                <a href tile-control-lightbox>
+                  <fa name="magnet"></fa> {{ 'LABELS.OPEN_IN_LIGHTBOX' | translate }}
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <!-- /tile header -->
+      <!-- tile body -->
+      <div class="tile-body table-custom">
+        <table id="tenants" name="tenants" width="100%" datatable="" dt-options="showCaseTenants.dtOptions" dt-columns="showCaseTenants.dtColumns" dt-instance="showCaseTenants.dtInstance" class="table table-custom">
+          <thead>
+            <tr>
+              <th class="bt-0">{{ 'LABELS.NAME' | translate }}</th>
+              <th class="bt-0">{{ 'LABELS.USER_NAME' | translate }}</th>
+              <th class="bt-0 text-center">
+                {{ 'LABELS.ACTION' | translate }}
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      <!-- /tile body -->
+    </section>
+    <!-- /tile -->
+  </div>
+  <!-- /page content -->
+</div>

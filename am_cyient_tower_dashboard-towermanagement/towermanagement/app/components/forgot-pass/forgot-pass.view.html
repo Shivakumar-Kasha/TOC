@@ -1,0 +1,39 @@
+<!--
+@Date:   02-14-2017 17:02:10
+@Project: AssetMonitoring
+@Last modified by:   Santhosh
+@Last modified time: 04-05-2017 20:04:94
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<div class="page page-forms-common">
+  <div class="container w-420 p-15 bg-white mt-40 text-center">
+    <div class="text-center">
+      <h3 class="text-light text-white"><img style="max-width: 100%;" src="images/vendor/logo-white.png" alt="{{ main.title }}"></h3>
+      <hr class="b-3x">
+      <h5 class="text-light brand-color"><strong>{{'LABELS.FORGOT_PASSWORD' | translate}}</strong></h5>
+    </div>
+    <form name="forgotPasswordForm" class="form-validation mt-20" ng-hide="hideForgotUI" novalidate>
+      <p class="help-block text-left">
+        {{'HELP_TEXT.ENTER_YOUR_USERNAME_BELOW_SEND_PASSWORD_RESET_LINK' | translate}}
+      </p>
+      <div class="form-group" ng-class="{ 'has-error' : forgotPasswordForm.usermailId.$invalid && !forgotPasswordForm.usermailId.$pristine, 'has-success' : forgotPasswordForm.usermailId.$valid && !forgotPasswordForm.usermailId.$pristine}">
+        <input type="email" name="usermailId" id="usermailId" placeholder="Enter Username (Mandatory)" class="form-control underline-input" ng-model="userMailId" ng-pattern="emailPattern" required>
+        <p class="help-block">
+          <span ng-show="forgotPasswordForm.usermailId.$invalid && !forgotPasswordForm.usermailId.$pristine">{{'HELP_TEXT.VALID_USER_NAME' | translate}}</span>
+        </p>
+      </div>
+      <div class="form-group text-left mt-20">
+        <p class="m-0">
+          <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ui-sref="core.login"><i class="fa fa-arrow-left"></i>{{'BUTTONS.BACK' | translate}}</button>
+          <button type="submit" class="btn btn-brand-color btn-ef btn-ef-3 btn-ef-3c pull-right" ng-click="forgotPassword()" ng-disabled="forgotPasswordForm.$invalid"><i class="fa fa-arrow-right"></i>{{'BUTTONS.SUBMIT' | translate}}</button>
+        </p>
+      </div>
+    </form>
+    <div ng-hide="hideMessage" class="text-center">
+      <p>{{ 'FORGOT_PASSWORD.SUCCESS.CHANGE_SUCCESS' | translate }}</p>
+      <br/>
+      <a ui-sref="core.login" href>{{'BUTTONS.BACK_TO_LOGIN' | translate}}</a>
+    </div>
+  </div>
+</div>

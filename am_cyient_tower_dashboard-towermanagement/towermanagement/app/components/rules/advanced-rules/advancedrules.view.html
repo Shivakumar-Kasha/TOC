@@ -1,0 +1,87 @@
+<!--
+@Date:   01-27-2017 12:01:70
+@Project: 24/7PizzaBOX
+@Last modified time: 04-18-2017 16:04:86
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<div class="page page-datatables">
+  <!-- page content -->
+  <div class="pagecontent">
+    <!-- row -->
+    <div class="row">
+      <!-- col -->
+      <div class="col-md-12">
+        <!-- tile -->
+        <section class="tile" fullscreen="isFullscreen02">
+          <!-- tile header -->
+          <div class="tile-header dvd dvd-btm">
+            <h1 class="custom-font"></h1>
+            <ul class="controls">
+              <li class="dropdown" uib-dropdown on-toggle="toggled(open)">
+                <a href uib-dropdown-toggle class="dropdown-toggle settings"><i class="fa fa-cog"></i></a>
+                <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+                  <li>
+                    <a href tile-control-toggle>
+                      <span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;Minimize</span>
+                      <span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;Expand</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-refresh>
+                      <fa name="refresh"></fa> Refresh
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-fullscreen ng-click="isFullscreen02 = !isFullscreen02">
+                      <fa name="expand"></fa> Fullscreen
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-lightbox>
+                      <fa name="magnet"></fa> Open in Lightbox
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <!-- /tile header -->
+          <!-- tile body -->
+          <div class="tile-body table-custom">
+            <div class="row">
+              <div class="col-md-12">
+                <form role="form-inline">
+                  <div class="col-sm-3 form-group">
+                    <label for="show">{{'LABELS.BUSINESS_RULES' | translate}}</label>
+                    <select class="form-control" id="show" ng-options="r.option as r.view for r in options" ng-model="rules" ng-change="changeRules()" ng-init="changeRules()">
+                                        </select>
+                  </div>
+                  <div class="col-sm-6 form-group"></div>
+                  <div class="col-sm-3 form-group text-center">
+                    <label for="refresh">&nbsp;</label>
+                    <br/>
+                    <button type="submit" ng-click="deployRules()" class="btn btn-brand-color btn-rounded">{{'BUTTONS.APPLY_RULES' | translate}}</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="row">
+              <div alert-display />
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <iframe ng-src="{{businessRulesUrl}}" width="100%" style="height: 80vh; overflow: hidden;" allowfullscreen></iframe>
+              </div>
+            </div>
+          </div>
+          <!-- /tile body -->
+        </section>
+        <!-- /tile -->
+      </div>
+      <!-- /col -->
+    </div>
+    <!-- /row -->
+  </div>
+  <!-- /page content -->
+</div>

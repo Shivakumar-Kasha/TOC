@@ -1,0 +1,25 @@
+<!--
+@Date:   03-27-2017 12:03:77
+@Project: AssetMonitoring
+@Last modified time: 04-11-2017 15:04:31
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<section class="tile tile-simple table-custom mb-0" ng-controller="ModelInfoCtrl as modelInfo">
+  <!-- tile body -->
+  <div class="tile-body table-custom ">
+    <a href ng-click="openAddSensorPrompt('');" ng-show={{showMaster}}>
+      <h4><i class="fa fa-plus "></i>&nbsp;<strong>Add</strong>&nbsp;Devices</h4>
+    </a>
+    <hr class="line-dashed line-half " />
+    <table id="Model" name="model" width="100%" datatable="" dt-options="modelInfo.dtOptions" dt-columns="modelInfo.dtColumns" dt-instance="modelInfo.dtInstance" class="table table-custom">
+      <thead>
+        <tr>
+          <th class="bt-0 ">{{ 'LABELS.NAME' | translate }}</th>
+          <th class="bt-0 text-center ">{{ 'LABELS.ACTION' | translate }}</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <!-- /tile body -->
+</section>

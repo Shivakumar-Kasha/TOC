@@ -1,0 +1,292 @@
+<!--
+@Date:   01-27-2017 12:01:65
+@Project: 24/7PizzaBOX
+@Last modified time: 04-20-2017 10:04:90
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<header ng-controller="HeaderCtrl" class="clearfix" >
+  <!-- Branding -->
+  <!-- <div class="branding {{main.settings.brandingColor}}">
+        <a class="brand" href>
+            <img style="width: 150px;" class="img" ng-src="images/logo.png" alt="">
+            <span><strong class="text-danger">{{ main.title }}</strong></span>
+        </a>
+        <a href="javascript:;" class="offcanvas-toggle visible-xs-inline" offcanvas-sidebar><i class="fa fa-bars"></i></a>
+    </div> -->
+  <!-- Branding end -->
+  <!-- Session expire warning prompt -->
+  <script type="text/ng-template" id="sessionExpireWarning.html">
+    <div class="modal-header">
+      <h3 class="modal-title custom-font"><strong>{{'LABELS.SESSION_EXPIRE_WARNING' | translate}}</strong></h3>
+    </div>
+    <div class="modal-body text-center">
+      <p><strong>{{message}}</strong></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-success btn-ef btn-ef-4 btn-ef-4c" ng-click="close()"><i class="fa fa-arrow-left"></i> {{'BUTTONS.OK' | translate}}</button>
+    </div>
+  </script>
+  <!-- /Session expire warning prompt -->
+  <!-- Download mobile app prompt -->
+  <script type="text/ng-template" id="downloadMobileAppPrompt.html">
+    <div class="modal-header">
+      <h3 class="modal-title custom-font"><b>{{'LABELS.MOBILE' | translate}}</b> {{'LABELS.APPS' | translate}}</h3>
+    </div>
+    <div class="modal-body">
+      <form name="downloadApp" class="form-horizontal" role="form" novalidate>
+        <div class="form-group">
+          <div class="col-sm-12 text-center">
+            <label>{{'LABELS.DOWNLOAD_APPS' | translate}}</label>
+          </div>
+        </div>
+        <div class="row text-center">
+          <div class="col-sm-6">
+            <a ng-href="{{ downloadDemoAppApk }}" class="btn btn-rounded btn-primary btn-sm" ng-click="downloadDemoApp()">{{'LABELS.ANDROID_DEMO_APP' | translate}} <i class="fa fa-arrow-circle-o-down"></i></a>
+          </div>
+          <div class="col-sm-6">
+            <a ng-href="{{ downloadTechnicianAppApk }}" class="btn btn-rounded btn-primary btn-sm" ng-click="downloadTechnicianApp()">{{'LABELS.ANDROID_TECHNICIAN_APP' | translate}} <i class="fa fa-arrow-circle-o-down"></i></a>
+          </div>
+        </div>
+        <hr class="line-dashed line-half" />
+        <div class="form-group">
+          <div class="col-sm-12 text-center">
+            <label>{{'LABELS.SEND_APP_DOWNLOAD_LINK_MOBILE' | translate}}</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputEmail3" style="float: left;" class="col-sm-6 control-label">{{'LABELS.ANDROID_DEMO_APP' | translate}}</label>
+          <div class="col-sm-4">
+            <input type="text" name="userPhoneNo" id="phone" class="form-control" ng-model="phoneNumber" intl-tel-input required>
+          </div>
+          <div class="col-sm-2">
+            <button type="submit" class="btn btn-rounded btn-primary btn-sm" ng-disabled="downloadApp.$invalid" ng-click="sendLinkForDemoApp(downloadApp.$valid)">{{'BUTTONS.SEND' | translate}} <i class="fa fa-paper-plane-o"></i></button>
+          </div>
+        </div>
+      </form>
+      <form name="downloadAppForTechnician" class="form-horizontal" role="">
+        <div class="form-group">
+          <label for="inputEmail4" style="float: left;" class="col-sm-6 control-label">{{'LABELS.ANDROID_TECHNICIAN_APP' | translate}}</label>
+          <div class="col-sm-4">
+            <input type="text" name="RTPhoneNo" id="RTphone" class="form-control" ng-model="RTphoneNumber" intl-tel-input required>
+          </div>
+          <div class="col-sm-2">
+            <button type="submit" class="btn btn-rounded btn-primary btn-sm" ng-disabled="downloadAppForTechnician.$invalid" ng-click="sendLinkForTechnicianApp(downloadAppForTechnician.$valid)">{{'BUTTONS.SEND' | translate}} <i class="fa fa-paper-plane-o"></i></button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{'BUTTONS.CLOSE' | translate}}</button>
+    </div>
+  </script>
+  <!-- /Download mobile app prompt -->
+  <!-- Left-side navigation -->
+  <ul class="nav-left pull-left list-unstyled list-inline">
+    <li class="sidebar-collapse divided-right">
+      <a href="javascript:;" collapse-sidebar>
+        <fa name="outdent"></fa>
+      </a>
+    </li>
+    <li class="dropdown divided-right settings" uib-dropdown>
+      <a href class="dropdown-toggle" uib-dropdown-toggle>
+        <fa name="cog"></fa>
+      </a>
+      <ul class="dropdown-menu with-arrow animated littleFadeInUp" role="menu">
+        <li>
+          <ul class="color-schemes list-inline">
+            <li class="title">{{'LABELS.HEADER_COLOR' | translate}}:</li>
+            <li>
+              <a href="javascript:;" class="scheme-cream" ng-click="main.settings.navbarHeaderColor='scheme-cream'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-gray" ng-click="main.settings.navbarHeaderColor='scheme-gray'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-orange" ng-click="main.settings.navbarHeaderColor='scheme-orange'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-black" ng-click="main.settings.navbarHeaderColor='scheme-black'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-greensea" ng-click="main.settings.navbarHeaderColor='scheme-greensea'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-cyan" ng-click="main.settings.navbarHeaderColor='scheme-cyan'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-light" ng-click="main.settings.navbarHeaderColor='scheme-light'; $event.stopPropagation()"></a>
+            </li>
+            <li class="title">{{'LABELS.SIDEBAR_COLOR' | translate}}:</li>
+            <li>
+              <a href="javascript:;" class="scheme-cream" ng-click="main.settings.sidebarColor='scheme-cream'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-gray" ng-click="main.settings.sidebarColor='scheme-gray'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-orange" ng-click="main.settings.sidebarColor='scheme-orange'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-black" ng-click="main.settings.sidebarColor='scheme-black'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-greensea" ng-click="main.settings.sidebarColor='scheme-greensea'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-cyan" ng-click="main.settings.sidebarColor='scheme-cyan'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-light" ng-click="main.settings.sidebarColor='scheme-light'; $event.stopPropagation()"></a>
+            </li>
+            <li class="title">{{'LABELS.ACTIVE_COLOR' | translate}}:</li>
+            <li>
+              <a href="javascript:;" class="scheme-cream" ng-click="main.settings.activeColor='cream-scheme-color'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-gray" ng-click="main.settings.activeColor='gray-scheme-color'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-orange" ng-click="main.settings.activeColor='orange-scheme-color'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-black" ng-click="main.settings.activeColor='black-scheme-color'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-greensea" ng-click="main.settings.activeColor='default-scheme-color'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-cyan" ng-click="main.settings.activeColor='cyan-scheme-color'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-light" ng-click="main.settings.activeColor='light-scheme-color'; $event.stopPropagation()"></a>
+            </li>
+            <li class="title">{{'LABELS.BACKGROUND_COLOR' | translate}}:</li>
+            <li>
+              <a href="javascript:;" class="scheme-cream" ng-click="main.settings.brandingColor='scheme-cream'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-gray" ng-click="main.settings.brandingColor='scheme-gray'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-orange" ng-click="main.settings.brandingColor='scheme-orange'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-black" ng-click="main.settings.brandingColor='scheme-black'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-greensea" ng-click="main.settings.brandingColor='scheme-greensea'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-cyan" ng-click="main.settings.brandingColor='scheme-cyan'; $event.stopPropagation()"></a>
+            </li>
+            <li>
+              <a href="javascript:;" class="scheme-light" ng-click="main.settings.brandingColor='scheme-light'; $event.stopPropagation()"></a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <div class="form-group ng-scope">
+            <div class="row">
+              <label class="col-xs-8 control-label">{{'LABELS.FIXED_HEADER' | translate}}</label>
+              <div class="col-xs-4 control-label">
+                <div class="onoffswitch lightred small" ng-click="$event.stopPropagation()">
+                  <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="fixed-header" checked="" ng-model="main.settings.headerFixed">
+                  <label class="onoffswitch-label" for="fixed-header">
+                                        <span class="onoffswitch-inner"></span>
+                                        <span class="onoffswitch-switch"></span>
+                                    </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="form-group ng-scope">
+            <div class="row">
+              <label class="col-xs-8 control-label">{{'LABELS.FIXED_ASIDE' | translate}}</label>
+              <div class="col-xs-4 control-label">
+                <div class="onoffswitch lightred small" ng-click="$event.stopPropagation()">
+                  <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="fixed-aside" checked="" ng-model="main.settings.asideFixed">
+                  <label class="onoffswitch-label" for="fixed-aside">
+                                        <span class="onoffswitch-inner"></span>
+                                        <span class="onoffswitch-switch"></span>
+                                    </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <!-- Left-side navigation end -->
+  <!-- Right-side navigation -->
+  <ul class="nav-right pull-right list-inline">
+    <li ng-show="{{showTenant}}" class="dropdown nav-profile" uib-dropdown>
+      <a href class="dropdown-toggle" style="cursor: text;" uib-dropdown-toggle>
+        <span><strong style="font-size: 15px;">{{tenantName}}</strong></span>
+      </a>
+    </li>
+    <li class="dropdown nav-profile" uib-dropdown>
+      <a href class="dropdown-toggle" uib-dropdown-toggle>
+        <img ng-src="{{userImage?userImage:'images/user-icon.png'}}" alt="" class="img-circle size-30x30">
+        <span><strong>{{ currentUser}} <fa name="angle-down"></fa></strong></span>
+      </a>
+      <ul class="dropdown-menu animated littleFadeInRight" role="menu">
+        <li class='text-center'>
+          <div class="thumb thumb-xl">
+            <img class="img-circle" ng-src="{{userImage?userImage:'images/user-icon.png'}}" alt="">
+          </div>
+        </li>
+        <li>
+          <a href ng-click="showDownloadPopup()" ng-show="{{showTenant}}">
+            <fa name="download"></fa>{{'LABELS.DOWNLOAD_MOBILE_APPS' | translate}}
+          </a>
+        </li>
+        <li>
+          <a ui-sref="app.settings">
+            <fa name="cog"></fa>{{'LABELS.SETTINGS' | translate}}
+          </a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a ng-click="logout()" href="#">
+            <fa name="sign-out"></fa>{{'LABELS.LOGOUT' | translate}}
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="dropdown language" uib-dropdown>
+      <a href class="dropdown-toggle" uib-dropdown-toggle>
+        <img ng-show="currentLanguage=='en'" src="images/flags/United-States-of-America.png" alt="">
+        <img ng-show="currentLanguage=='sk'" src="images/flags/Slovakia.png" alt="">
+        <img ng-show="currentLanguage=='cz'" src="images/flags/Czech-Republic.png" alt="">
+        <img ng-show="currentLanguage=='de'" src="images/flags/Germany.png" alt="">
+      </a>
+      <ul class="dropdown-menu pull-right with-arrow animated littleFadeInDown" role="menu">
+        <li ng-class="{active: currentLanguage=='en' }">
+          <a href="javascript:;" ng-click="changeLanguage( 'en')">
+            <img src="images/flags/United-States-of-America.png" alt=""> English
+          </a>
+        </li>
+        <li ng-class="{active: currentLanguage=='sk' }">
+          <a href="javascript:;" ng-click="changeLanguage( 'sk')">
+            <img src="images/flags/Slovakia.png" alt=""> Slovak
+          </a>
+        </li>
+        <li ng-class="{active: currentLanguage=='cz' }">
+          <a href="javascript:;" ng-click="changeLanguage( 'cz')">
+            <img src="images/flags/Czech-Republic.png" alt=""> Czech
+          </a>
+        </li>
+        <li ng-class="{active: currentLanguage=='de' }">
+          <a href="javascript:;" ng-click="changeLanguage( 'de')">
+            <img src="images/flags/Germany.png" alt=""> German
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <!-- Right-side navigation end -->
+</header>

@@ -1,0 +1,162 @@
+<!--
+@Date:   01-27-2017 12:01:35
+@Project: 24/7PizzaBOX
+@Last modified time: 04-18-2017 12:04:07
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<div class="page page-datatables">
+  <!-- UnAssign User Prompt -->
+  <script type="text/ng-template" id="unassignUserFromZonePrompt.html">
+    <div class="modal-header">
+      <h3 class="modal-title custom-font"><strong>{{'LABELS.UNASSIGN' | translate}}</strong>&nbsp;{{'LABELS.USER' | translate}}</h3>
+    </div>
+    <div class="modal-body text-center">
+      <p class="text-danger"><strong>{{'INFO.UNASSIGN_USER' | translate}}</strong></p>
+      <div class="row"><strong>{{'LABELS.USER_NAME' | translate}}: </strong> {{unassignUserMail}}</div>
+      <div class="row"><strong>{{'LABELS.NAME' | translate}}: </strong> {{unassignUserName}}</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="unassignUser()"><i class="fa fa-arrow-right"></i> {{'BUTTONS.UNASSIGN' | translate}}</button>
+      <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{'BUTTONS.CANCEL' | translate}}</button>
+    </div>
+  </script>
+  <!-- /UnAssign User Prompt -->
+  <!-- UnAssign Asset Prompt -->
+  <script type="text/ng-template" id="unassignAssetFromZonePrompt.html">
+    <div class="modal-header">
+      <h3 class="modal-title custom-font"><strong>{{'LABELS.UNASSIGN' | translate}}</strong>&nbsp;{{ 'Menu.ASSETTYPE' | translate }}</h3>
+    </div>
+    <div class="modal-body text-center">
+      <p class="text-danger"><strong>{{ 'INFO.UNASSIGN' | translate }} {{ 'Menu.ASSETTYPE' | translate }}?</strong></p>
+      <div class="row"><strong>Name: </strong> {{unassignAssetName}}</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="unassignMachine()"><i class="fa fa-arrow-right"></i> {{'BUTTONS.UNASSIGN' | translate}}</button>
+      <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{'BUTTONS.CANCEL' | translate}}</button>
+    </div>
+  </script>
+  <!-- /UnAssign Asset Prompt -->
+  <script type="text/ng-template" id="assignUsersPrompt.html">
+    <div class="modal-header">
+      <h3 class="modal-title custom-font"><strong>{{'LABELS.ASSIGN' | translate}}</strong>&nbsp;{{'LABELS.USERs' | translate}}</h3>
+    </div>
+    <div class="modal-body">
+      <form class="form-inline">
+        <div class="form-group">
+          <label for="assignuserzone">{{'LABELS.FILTER_BY' | translate}}</label>
+          <select class="form-control" id="assignuserType" ng-model="userFilterType">
+            <option value="firstName">{{'LABELS.FIRST_NAME' | translate}}</option>
+              <option value="lastName">{{'LABELS.LAST_NAME' | translate}}</option>
+              <option value="userRole">{{'LABELS.ROLE' | translate}}</option>
+                    </select>
+        </div>
+        <div class="form-group">
+          <label for=""></label>
+          <input type="text" class="form-control" id="assignuserValue" placeholder="Case-Sensitive" ng-model="userFilterValue">
+        </div>
+        <button type="submit" class="btn btn-primary btn-rounded" ng-click="showUsersToAssignZone.dtInstance.reloadData(null, false);">{{'BUTTONS.SEARCH' | translate}}</button>
+      </form>
+      <hr class="line-dashed line-half" />
+      <section class="table-custom">
+        <table id="zone-unassigned-users" name="zone-unassigned-users" width="100%" datatable="" dt-options="showUsersToAssignZone.dtOptions" dt-columns="showUsersToAssignZone.dtColumns" dt-instance="showUsersToAssignZone.dtInstance" class="table table-custom">
+          <thead>
+            <tr>
+              <th class="bt-0">{{'LABELS.USER_NAME' | translate}}</th>
+              <th class="bt-0">{{'LABELS.NAME' | translate}}</th>
+              <th class="bt-0">{{'LABELS.ROLE' | translate}}</th>
+              <th class="bt-0">
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </section>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="assignUserToZone()" ng-disabled="selectedData.length == 0"><i class="fa fa-arrow-right"></i> {{'BUTTONS.ASSIGN' | translate}}</button>
+      <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{'BUTTONS.CANCEL' | translate}}</button>
+    </div>
+  </script>
+  <script type="text/ng-template" id="assignAssetPrompt.html">
+    <div class="modal-header">
+      <h3 class="modal-title custom-font"><strong>{{'LABELS.ASSIGN' | translate}}</strong>&nbsp;{{ 'Menu.ASSETTYPES' | translate }}</h3>
+    </div>
+    <div class="modal-body">
+      <form class="form-inline">
+        <div class="form-group">
+          <label for="assignbinzone">{{'LABELS.FILTER_BY' | translate}}</label>
+          <select class="form-control" id="assignzone" ng-model="assetFilterType">
+                        <option value="c_name">{{'LABELS.NAME' | translate}}</option>
+                        <option value="c_address">{{'LABELS.ADDRESS' | translate}}</option>
+                    </select>
+        </div>
+        <div class="form-group">
+          <label for=""></label>
+          <input type="text" class="form-control" id="" placeholder="{{('PLACE_HOLDERS.CASE_SENSITIVE' | translate)}}" ng-model="assetFilterValue">
+        </div>
+        <button type="submit" class="btn btn-primary btn-rounded" ng-click="unassignedAssets.dtInstance.reloadData(null, false);">{{'BUTTONS.SEARCH' | translate}}</button>
+      </form>
+      <hr class="line-dashed line-half" />
+      <section class="table-custom">
+        <table id="zone-unassigned-vms" name="zone-assigned-users" width="100%" datatable="" dt-options="unassignedAssets.dtOptions" dt-columns="unassignedAssets.dtColumns" dt-instance="unassignedAssets.dtInstance" class="table table-custom">
+          <thead>
+            <tr>
+              <th class="bt-0">{{'LABELS.NAME' | translate}}</th>
+              <th class="bt-0">{{'LABELS.ADDRESS' | translate}}</th>
+              <th class="bt-0">
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </section>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="assignAssetsToZone()" ng-disabled="selectedData.length == 0"><i class="fa fa-arrow-right"></i> {{'BUTTONS.ASSIGN' | translate}}</button>
+      <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{'BUTTONS.CANCEL' | translate}}</button>
+    </div>
+  </script>
+  <!-- page content -->
+  <div class="pageheader">
+    <div class="page-bar">
+      <ul class="page-breadcrumb">
+        <li>
+          <a ui-sref="app.zones" class="btn btn-brand-color"><i class="fa fa-arrow-left"></i> &nbsp;{{'BUTTONS.BACK_TO_ZONE' | translate}}</a>
+        </li>
+      </ul>
+      <div class="page-toolbar">
+
+        <i class="fa fa-map-marker"></i>&nbsp;&nbsp;<strong>{{zoneDisplayName}}</strong>
+
+      </div>
+    </div>
+    <br/>
+    <div class="row">
+      <!-- col -->
+      <div class="col-md-12">
+        <uib-tabset class="mb-20" justified="true">
+          <uib-tab ng-repeat="tab in tabs" select="setTabContent(tab.content)">
+            <uib-tab-heading>
+              <fa name="{{tab.faName}}"></fa>&nbsp;{{tab.heading}}
+            </uib-tab-heading>
+          </uib-tab>
+          <ng-include src="tabContentUrl"></ng-include>
+          <!-- <uib-tab select="setTabContent('zone-users')">
+                        <uib-tab-heading>
+                            <fa name="users"></fa>&nbsp;Users
+                        </uib-tab-heading>
+                        <ng-include src="tabContentUrl"></ng-include>
+                    </uib-tab>
+                    <uib-tab select="setTabContent('zone-assets')">
+                        <uib-tab-heading>
+                            <fa name="building"></fa>&nbsp;Vending Machines
+                        </uib-tab-heading>
+                        <ng-include src="tabContentUrl"></ng-include>
+                    </uib-tab> -->
+        </uib-tabset>
+      </div>
+      <!-- /col -->
+    </div>
+    <!-- /row -->
+  </div>
+  <!-- /page content -->
+</div>

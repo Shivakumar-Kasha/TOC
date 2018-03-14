@@ -1,0 +1,123 @@
+
+<div class="page page-datatables">
+  <!-- page content -->
+  <div class="pagecontent">
+    <!-- row -->
+    <div class="row">
+      <!-- col -->
+      <div class="col-md-12">
+
+
+<section class="tile" fullscreen="isFullscreen02">
+  <!-- Filter Prompt -->
+  <script type="text/ng-template" id="dashboardFilterPrompt.html">
+    <div class="modal-header">
+      <h3 class="modal-title custom-font"><strong>{{ 'LABELS.FILTER' | translate }}</strong></h3>
+    </div>
+    <div class="modal-body">
+      <form name="assetForm" ng-submit="submit()">
+        <div class="row">
+          <div ng-show="{{showMaster}}" class="form-group col-md-12">
+            <label for="name">{{ 'LABELS.TENANT' | translate }}: </label>
+            <select chosen="{width: '100%'}" class="form-control" ng-model="filter.tenantId" data-placeholder-text-single="'All'" no-results-text="'Could not find tenants'" ng-options="tenant._customInfo.c_id as tenant._customInfo.c_name for tenant in tenants | orderBy:'_customInfo.c_name'">
+                            <option value="">{{ 'LABELS.ALL' | translate }}</option>
+                        </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="show">{{ 'LABELS.STATUS' | translate }}:</label>
+            <select class="form-control" id="status" ng-options="a.option as a.view for a in statusOptions | orderBy:'view'" ng-model="filter.status">
+                              </select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="name">{{ 'LABELS.MODEL' | translate }}: </label>
+            <select chosen="{width: '100%'}" class="form-control" ng-model="filter.model" data-placeholder-text-single="'All'" no-results-text="'Could not find models'" ng-options="model._customInfo.c_id as model._customInfo.c_name for model in models | orderBy:'_customInfo.c_name'">
+                                  <option value="">{{ 'LABELS.ALL' | translate }}</option>
+                              </select>
+          </div>
+          <!-- <div class="form-group col-md-4">
+                              <label for="show">Connectivity:</label>
+                              <select class="form-control" id="connecticity" ng-options="a.option as a.view for a in connectivityOptions" ng-model="filter.connectivity">
+                              </select>
+                          </div> -->
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="address">{{ 'LABELS.ADDRESS' | translate }}:</label>
+            <input type="text" class="form-control" id="address" ng-model="filter.address" placeholder="Address" autocomplete="on" googleplace/>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="radius">{{(filter.val === 100)?('LABELS.EVERYWHERE' | translate):('LABELS.RADIUS_MI' | translate).replace('###', filter.val)}}</label>
+            <br/>
+            <input style="width: 100%;" id="slider" ui-jq="slider" ui-event="{slideStop: 'updateModel($event)'}" ui-options="{
+                              min: 1,
+                              max: 100,
+                              step: 1,
+                              value: {{filter.val}}
+                          }" class="slider slider-horizontal form-control" type="text">
+          </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="filterData()"><i class="fa fa-arrow-right"></i>{{ 'LABELS.FILTER' | translate }}</button>
+      <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{ 'BUTTONS.CANCEL' | translate }}</button>
+    </div>
+    </form>
+  </script>
+  <!-- /Filter  Prompt -->
+
+
+          <div class="tile-header dvd dvd-btm">
+            <h3>&nbsp;</h3>
+            <ul class="controls">
+              <li class="dropdown" uib-dropdown on-toggle="toggled(open)">
+                <a href uib-dropdown-toggle class="dropdown-toggle settings"><i class="fa fa-cog"></i></a>
+                <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+                  <li>
+                    <a href tile-control-toggle>
+                          <span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.MINIMIZE' | translate }}</span>
+                          <span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.EXPAND' | translate }}</span>
+                        </a>
+                  </li>
+                  <li>
+                    <a href ng-click="sensorInfo.dtInstance.reloadData()">
+                      <fa name="refresh"></fa> {{ 'LABELS.REFRESH' | translate }}
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-fullscreen ng-click="isFullscreen02 = !isFullscreen02">
+                      <fa name="expand"></fa> {{ 'LABELS.FULL_SCREEN' | translate }}
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-lightbox>
+                      <fa name="magnet"></fa> {{ 'LABELS.OPEN_IN_LIGHTBOX' | translate }}
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <!-- tile body -->
+          <div class="tile-body table-custom">
+<div class="table-responsive">
+  <table id="vms" name="vms" width="100%" datatable dt-options="overallHealthInfo.dtOptions" dt-columns="overallHealthInfo.dtColumns" dt-instance="overallHealthInfo.dtInstance" class="table table-custom">
+    <thead>
+      <tr>
+        <th class="bt-0">{{ 'LABELS.NAME' | translate }}</th>
+        <th class="bt-0">{{ 'LABELS.ADDRESS' | translate }}</th>
+        <th class="bt-0">{{ 'LABELS.LATITUDE' | translate }}</th>
+        <th class="bt-0">{{ 'LABELS.LONGITUDE' | translate }}</th>
+        <th class="bt-0">{{ 'LABELS.STATUS' | translate }}</th>
+      </tr>
+    </thead>
+  </table>
+</div>
+</div>
+</section>
+</div>
+</tile-body>
+</tile>
+</div></div></div>

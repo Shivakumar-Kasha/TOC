@@ -1,0 +1,60 @@
+<!--
+@Date:   03-27-2017 12:03:77
+@Project: AssetMonitoring
+@Last modified time: 04-11-2017 15:04:31
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<section class="tile tile-simple table-custom mb-0" ng-controller="DeviceInfoCtrl">
+  <!-- tile body -->
+  <div class="tile-body">
+    <form name="propertiesForm" role="form" novalidate>
+      <br>
+
+      <fieldset data-ng-repeat="key in propertyKeys">
+        <div class="form-group col-md-3" ng-class="{ 'has-error' : propertiesForm.label.$invalid && !propertiesForm.label.$pristine, 'has-success' : propertiesForm.label.$valid && !propertiesForm.label.$pristine}">
+          <label for="name">{{ 'LABELS.LABEL' | translate }}: </label>
+          <input type="text" name="name" id="name" class="form-control" value="Name" ng-model="template.form[key].label" ng-change="copyPropertyLabel(template.form[key].label, key)" required>
+          <p class="help-block">
+            <span ng-show="propertiesForm.label.$invalid && !propertiesForm.label.$pristine">{{ 'HELP_TEXT.LABEL_REQUIRED' | translate }}</span>
+          </p>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="name">{{ 'LABELS.TYPE' | translate }}:</label>
+          <select chosen="{width: '100%'}" class="form-control mb-10" ng-model="template.form[key].type" data-placeholder-text-single="'Choose Type'" required>
+                                    <option value="">Choose Type</option>
+                                    <option value="string">String</option>
+                                    <option value="number">Number</option>
+                                    <option value="date">Date</option>
+                                      <option value="boolean">Boolean</option>
+                                </select>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="metric">{{ 'LABELS.HINT_TEXT' | translate }}: </label>
+          <input type="text" name="metric" id="metric" class="form-control" ng-model="template.form[key].hint" ng-required={{required}}>
+        </div>
+        <div class="form-group col-md-3" ng-class="{ 'has-error' : propertiesForm.label.$invalid && !propertiesForm.label.$pristine, 'has-success' : propertiesForm.label.$valid && !propertiesForm.label.$pristine}">
+          <label for="name">{{ 'LABELS.ID' | translate }}: </label>
+          <input type="text" name="name" id="name" class="form-control" ng-model="template.form[key].propertyId" no-special-char required>
+          <p class="help-block">
+            <span ng-show="propertiesForm.label.$invalid && !propertiesForm.label.$pristine">{{ 'HELP_TEXT.LABEL_REQUIRED' | translate }}</span>
+          </p>
+        </div>
+        <div class="form-group col-md-1">
+          <label for="required">{{ 'LABELS.REQUIRED' | translate }}:</label> <br>
+          <label class="checkbox-inline checkbox-custom-alt text-center"><input type="checkbox" name="required" id="required" ng-model="template.form[key].required"><i></i></label>
+        </div>
+
+        <div class="form-group col-md-1">
+          <label for="name" style="width: 100px;"> </label>
+          <button title="Remove Property" class="btn btn-danger btn-rounded" ng-click="removePropertyKey(key)" ng-show={{showMaster}} ng-disabled="{{showTenant}} || (propertyKeys.length<2)||((template.form[key].name).toUpperCase()=='ID' )||((template.form[key].name).toUpperCase()=='NAME' )"><i class="fa fa-minus" aria-hidden="true"></i></button>
+        </div>
+      </fieldset>
+
+      <hr ng-show={{showMaster}}>
+      <button title="Add Property" class="btn btn-success btn-rounded" ng-click="addPropertyKey()" ng-disabled="(propertyKeys.length>= max_model_properties)" ng-show={{showMaster}}><i class="fa fa-plus" aria-hidden="true"></i></button>
+      <button style="float: right;" class="btn btn-brand-color btn-rounded" ng-show={{showMaster}} ng-click="submit()" ng-disabled="propertiesForm.$invalid"> {{ 'BUTTONS.UPDATE' | translate }}</button>
+    </form>
+  </div>
+  <!-- /tile body -->
+</section>

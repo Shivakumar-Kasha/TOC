@@ -1,0 +1,144 @@
+<!--
+
+@Date:   03-04-2017
+@Project:AssetMonitoring
+@Filename: alerts.view.html
+@Last modified by:   santhosh
+@Last modified time: 04-07-2017 12:14:51
+@Copyright: @Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+
+
+<div class="page page-datatables">
+
+  <!-- page content -->
+  <div class="pagecontent">
+
+
+    <!-- row -->
+    <div class="row">
+      <!-- col -->
+      <div class="col-md-12">
+
+        <!-- Filter Prompt -->
+
+        <script type="text/ng-template" id="filterPrompt.html">
+          <div class="modal-header">
+            <h3 class="modal-title custom-font"><strong>{{ 'LABELS.FILTER' | translate }}</strong></h3>
+          </div>
+          <div class="modal-body">
+            <form name="assetForm" ng-submit="submit()">
+
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label for="asset_name">{{ 'Menu.ASSETTYPE' | translate }} {{ 'LABELS.NAME' | translate }}: </label>
+                  <input type="text" name="asset_name" id="asset_name" placeholder="{{ 'PLACE_HOLDERS.ENTER' | translate }} {{ 'Menu.ASSETTYPE' | translate }} {{ 'LABELS.NAME' | translate }} {{'PLACE_HOLDERS.CASE_SENSITIVE_WITH_BRACES' | translate}} " class="form-control"
+                    ng-model="filter.assetName">
+
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="assetlocation">{{ 'Menu.ASSETTYPE' | translate }} {{ 'LABELS.LOCATION' | translate }}: </label>
+                  <input type="text" name="assetlocation" id="assetlocation" placeholder="{{ 'PLACE_HOLDERS.ENTER' | translate }} {{ 'Menu.ASSETTYPE' | translate }} {{ 'LABELS.LOCATION' | translate }} {{'PLACE_HOLDERS.CASE_SENSITIVE_WITH_BRACES' | translate}} " class="form-control"
+                    ng-model="filter.assetLocation">
+
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label for="sensor_type">{{ 'LABELS.SENSOR_NAME' | translate }}: </label>
+                  <input type="text" name="sensor_type" id="sensor_type" placeholder="{{ 'PLACE_HOLDERS.ENTER' | translate }} {{ 'LABELS.SENSOR_TYPE' | translate }} {{'PLACE_HOLDERS.CASE_SENSITIVE_WITH_BRACES' | translate}} " class="form-control" ng-model="filter.sensorType">
+
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label for="alert">{{ 'LABELS.ALERT' | translate }}: </label>
+                  <input type="text" name="alert" id="alert" placeholder="{{ 'PLACE_HOLDERS.ENTER' | translate }} {{ 'LABELS.ALERT' | translate }} {{'PLACE_HOLDERS.CASE_SENSITIVE_WITH_BRACES' | translate}} " class="form-control" ng-model="filter.assetAlert">
+
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="filterData()"><i class="fa fa-arrow-right"></i>{{ 'LABELS.FILTER' | translate }}</button>
+            <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{ 'BUTTONS.CANCEL' | translate }}</button>
+          </div>
+          </form>
+        </script>
+        <!-- /Filter  Prompt -->
+
+        <!-- tile -->
+        <section class="tile" fullscreen="isFullscreen02">
+
+          <!-- tile header -->
+          <div class="tile-header dvd dvd-btm">
+            <h1 class="custom-font"></h1>
+            <a href ng-click="openFilter()"><h3><i class="fa fa-filter"></i>&nbsp;<strong>{{ 'LABELS.FILTER' | translate }}</strong></h3></a>
+            <a style="float:right; margin-right:35px;" href="" ng-click="resetAlertFilter()"><i class="fa fa-undo" aria-hidden="true"></i>&nbsp;<h3 class="custom-font"><strong>{{ 'LABELS.RESET' | translate }}</strong></h3></a>
+            <ul class="controls">
+              <li class="dropdown" uib-dropdown on-toggle="toggled(open)">
+
+                <a href uib-dropdown-toggle class="dropdown-toggle settings"><i class="fa fa-cog"></i></a>
+
+                <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+                  <li>
+                    <a href tile-control-toggle>
+                          <span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.MINIMIZE' | translate }}</span>
+                          <span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.EXPAND' | translate }}</span>
+                        </a>
+                  </li>
+                  <li>
+                    <a href ng-click="alertInfo.dtInstance.reloadData()">
+                      <fa name="refresh"></fa> {{ 'LABELS.REFRESH' | translate }}
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-fullscreen ng-click="isFullscreen02 = !isFullscreen02">
+                      <fa name="expand"></fa> {{ 'LABELS.FULL_SCREEN' | translate }}
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-lightbox>
+                      <fa name="magnet"></fa> {{ 'LABELS.OPEN_IN_LIGHTBOX' | translate }}
+                    </a>
+                  </li>
+                </ul>
+
+              </li>
+            </ul>
+          </div>
+          <!-- /tile header -->
+
+          <!-- tile body -->
+          <div class="tile-body table-custom">
+            <div class="table-responsive">
+              <table width="100%" datatable="" dt-options="alertInfo.dtOptions" dt-columns="alertInfo.dtColumns" dt-instance="alertInfo.dtInstance" class="table table-custom">
+                <thead>
+                  <tr>
+                    <th class="bt-0">{{ 'Menu.ASSETTYPE' | translate }} {{'LABELS.NAME' | translate}}</th>
+                    <th width="20%" class="bt-0">{{ 'Menu.ASSETTYPE' | translate }} {{ 'LABELS.LOCATION' | translate }}</th>
+                    <th class="bt-0">{{ 'LABELS.SENSOR_NAME' | translate }}</th>
+                    <th class="bt-0">{{ 'LABELS.SENSOR_READING' | translate }}</th>
+                    <th class="bt-0">{{ 'LABELS.ALERT' | translate }}</th>
+                    <th class="bt-0">{{'LABELS.UPDATED_AT' | translate}}</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
+          <!-- /tile body -->
+
+        </section>
+        <!-- /tile -->
+      </div>
+      <!-- /col -->
+    </div>
+    <!-- /row -->
+
+  </div>
+  <!-- /page content -->
+
+
+
+
+</div>

@@ -1,0 +1,226 @@
+<!--
+@Date:   01-27-2017 12:01:31
+@Project: 24/7PizzaBOX
+@Last modified time: 04-18-2017 14:04:69
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+<div class="page page-charts">
+  <!-- Filter Prompt -->
+  <script type="text/ng-template" id="analyticsFilterPrompt.html">
+    <div class="modal-header">
+      <h3 class="modal-title custom-font"><b>Filter</b></h3>
+    </div>
+    <div class="modal-body">
+      <form name="assetForm" ng-submit="submit()">
+        <div class="row">
+          <div ng-show="{{showMaster}}" class="form-group col-md-12">
+            <label for="name">Tenant: </label>
+            <select chosen="{width: '100%'}" class="form-control" ng-model="filter.tenantId" data-placeholder-text-single="'Choose Tenant'" no-results-text="'Could not find tenants'" ng-options="tenant._customInfo.c_id as tenant._customInfo.c_name for tenant in tenants | orderBy:'_customInfo.c_name'">
+                            <option value="">All</option>
+                        </select>
+          </div>
+        </div>
+        <div class="row">
+          <!--  <div class="form-group col-md-6">
+            <label for="show">Location:</label>
+            <select class="form-control" id="location" ng-options="a.option as a.view for a in locationOptions" ng-model="filter.locationType">
+                        </select>
+          </div> -->
+          <!-- <div class="form-group col-md-6">
+            <label for="name">Model: </label>
+            <select chosen="{width: '100%'}" class="form-control" ng-model="filter.modelId" data-placeholder-text-single="'Choose Model'" no-results-text="'Could not find models'" ng-options="model._customInfo.c_id as model._customInfo.c_name for model in models | orderBy:'_customInfo.c_name'">
+                            <option value="">All</option>
+                        </select>
+          </div> -->
+          <!-- <div class="form-group col-md-4" ng-show="false">
+                        <label for="show">Connectivity:</label>
+                        <select class="form-control" id="connecticity" ng-options="a.option as a.view for a in connectivityOptions" ng-model="filter.connectivity">
+                        </select>
+                    </div> -->
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="from">From:</label>
+            <div style="width: 100%;" class="input-group w-md">
+              <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="filter.fromDate" is-open="fromOpened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+              <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="open($event, 'from')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="to">To:</label>
+            <div style="width: 100%;" class="input-group w-md">
+              <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="filter.toDate" is-open="toOpened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+              <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="open($event, 'to')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="filterAnalytics()"><i class="fa fa-arrow-right"></i>Filter</button>
+      <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> Cancel</button>
+    </div>
+    </form>
+  </script>
+  <!-- /Filter  Prompt -->
+  <!-- page header -->
+  <div class="pagecontent">
+    <!-- row -->
+    <div class="row">
+      <!-- col -->
+      <div class="col-md-12">
+        <!-- tile -->
+        <section class="tile" fullscreen="isFullscreen01">
+          <!-- tile header -->
+          <div class="tile-header dvd dvd-btm">
+            <h1 class="custom-font"></h1>
+            <a href ng-click="openFilter()">
+              <h3><i class="fa fa-filter"></i>&nbsp;<strong>Filter</strong></h3></a>&nbsp;
+            <!-- <i class="glyphicon glyphicon-calendar"></i>&nbsp;<strong>{{fromDate}}</strong>-
+            <i class="glyphicon glyphicon-calendar "></i>&nbsp;<strong>{{toDate}}<strong> -->
+
+            <label ng-show="{{showMaster}}"><strong class="text-danger">&nbsp;&nbsp;{{analytics.selectedAnalyticsTenant}}</strong></label>
+            <a style="float: right; margin-right: 35px;" href ng-click="resetAnalyticsFilter()">
+              <h3><i class="fa fa-undo"></i>&nbsp;<strong>Reset</strong></h3></a>
+            <a style="margin-right: 35px; margin-top: 5px;" date-begin="startDate" date-end="endDate">
+           <i class="fa fa-calendar"></i>&nbsp;&nbsp;<strong>{{analytics.fromDate | date: 'MM-dd-yyyy'}} To {{analytics.toDate |date:'MM-dd-yyyy'}}</strong>&nbsp;&nbsp;
+         </a>
+            <ul class="controls">
+              <li class="dropdown" uib-dropdown on-toggle="toggled(open)">
+                <a href uib-dropdown-toggle class="dropdown-toggle settings"><i
+                  class="fa fa-cog"></i></a>
+                <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+                  <li>
+                    <a href tile-control-toggle> <span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;Minimize</span>
+                      <span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;Expand</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href ng-click="showCase.dtInstance.reloadData()">
+                      <fa name="refresh"></fa> Refresh
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-fullscreen ng-click="isFullscreen01=! isFullscreen01">
+                      <fa name="expand"></fa> Fullscreen
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-lightbox>
+                      <fa name="magnet"></fa>
+                      Open in Lightbox
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <!-- /tile header -->
+        </section>
+        <!-- /tile -->
+      </div>
+      <!-- /col -->
+    </div>
+    <!-- /row -->
+  </div>
+  <!-- /page header -->
+  <!-- page content -->
+  <div class="pagecontent">
+
+    <!-- row -->
+    <div class="row">
+      <div class="col-md-6">
+        <section class="tile" fullscreen="isFullscreen06">
+          <div class="tile-header dvd dvd-btm">
+            <h1 class="custom-font"><strong>{{ 'ANALYTICS.TITLE.ISSUES' | translate }}</strong></h1>
+            <ul class="controls">
+              <li class="dropdown" uib-dropdown on-toggle="toggled(open)">
+                <a href uib-dropdown-toggle class="dropdown-toggle settings"><i class="fa fa-cog"></i></a>
+                <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+                  <li>
+                    <a href tile-control-toggle>
+                      <span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;Minimize</span>
+                      <span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;Expand</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href ng-click="getSensorIssuesChart()">
+                      <fa name="refresh"></fa> Refresh
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-fullscreen ng-click="isFullscreen06=! isFullscreen06">
+                      <fa name="expand"></fa> Fullscreen
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-lightbox>
+                      <fa name="magnet"></fa> Open in Lightbox
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li class="remove"><a href tile-control-close><i class="fa fa-times"></i></a></li>
+            </ul>
+          </div>
+          <div style="text-transform:capitalize;" class="tile-body" ng-init="getSensorIssuesChart()">
+            <div morris-bar-chart bar-data='getSensorIssuesData' bar-xkey='sensorType' bar-ykeys='["issuesCount"]' bar-labels='["Count"]' bar-colors='["#f0ad4e"]' style="height: 300px"></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-md-6">
+        <!-- tile -->
+        <section class="tile" fullscreen="isFullscreen04">
+          <!-- tile header -->
+          <div class="tile-header dvd dvd-btm">
+            <h1 class="custom-font"><strong>{{ 'ANALYTICS.TITLE.ASSETS' | translate }}</strong></h1>
+            <ul class="controls">
+              <li class="dropdown" uib-dropdown on-toggle="toggled(open)">
+                <a href uib-dropdown-toggle class="dropdown-toggle settings"><i class="fa fa-cog"></i></a>
+                <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+                  <li>
+                    <a href tile-control-toggle>
+                      <span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;Minimize</span>
+                      <span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;Expand</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href ng-click="getWarehouseIssueChart()">
+                      <fa name="refresh"></fa> Refresh
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-fullscreen ng-click="isFullscreen04=! isFullscreen04">
+                      <fa name="expand"></fa> Fullscreen
+                    </a>
+                  </li>
+                  <li>
+                    <a href tile-control-lightbox>
+                      <fa name="magnet"></fa> Open in Lightbox
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li class="remove"><a href tile-control-close><i class="fa fa-times"></i></a></li>
+            </ul>
+          </div>
+          <!-- /tile header -->
+          <!-- tile body -->
+          <div class="tile-body" ng-init="getAssetIssueChart()">
+            <div morris-line-chart line-data='warehouseIssueData' line-xkey='time' line-ykeys='["count"]' line-labels='["Assets"]' line-colors='["#a2d200"]' line-postUnits='' line-width='2' fill-opacity='.5' show-grid='true' style="height:
+                300px"></div>
+          </div>
+          <!-- /tile body -->
+        </section>
+        <!-- /tile -->
+      </div>
+      <section ng-include=" 'views/footer.html'" id="footer"></section>
+    </div>
+    <!-- /page content -->
+    <br>
+    <br>
+  </div>

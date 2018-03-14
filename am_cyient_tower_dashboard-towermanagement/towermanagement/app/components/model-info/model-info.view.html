@@ -1,0 +1,144 @@
+<!--
+@Date:   02-21-2017 10:02:55
+@Project: AssetMonitoring
+@Last modified time: 04-12-2017 12:04:71
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+<div class="page page-datatables">
+  <!-- update model name prompt -->
+  <script type="text/ng-template" id="editModelNamePrompt.html">
+    <div class="modal-header">
+      <h3 class="modal-title custom-font"><strong>{{ 'VIEW.EDIT' | translate }}</strong>&nbsp;{{ 'LABELS.MODEL' | translate }}</h3>
+    </div>
+    <div class="modal-body">
+      <form name="editModelNameForm" ng-submit="submit()" role="form" novalidate>
+        <div alert-display></div>
+        <div class="row">
+          <div class="form-group col-md-6" ng-class="{ 'has-error' : editModelNameForm.modelName.$invalid && !editModelNameForm.modelName.$pristine, 'has-success' : editModelNameForm.modelName.$valid && !editModelNameForm.modelName.$pristine}" required>
+            <label for="modelName">{{ 'LABELS.NAME' | translate }}: </label>
+            <input type="text" name="modelName" id="modelName" placeholder="{{ ('PLACE_HOLDERS.ENTER_NAME' | translate) + ' ' +  ('PLACE_HOLDERS.MANDATORY' | translate)}}" class="form-control" ng-model="modelName" ng-readOnly="{{enableToMaster}}">
+            <p class="help-block">
+              <span ng-show="editModelNameForm.modelName.$invalid && !editModelNameForm.modelName.$pristine">{{ 'HELP_TEXT.ENTER_NAME' | translate }}</span>
+            </p>
+          </div>
+          <div class="form-group col-md-6">
+          </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-disabled="editModelNameForm.$invalid" ng-click="submit();" ng-show="{{showMaster}}"><i class="fa fa-arrow-right"></i> {{ 'BUTTONS.UPDATE' | translate }}</button>
+      <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{ 'BUTTONS.CANCEL' | translate }}</button>
+    </div>
+  </script>
+
+  <!-- Delete Sensor  -->
+  <script type="text/ng-template" id="deleteDeviceFromModelPrompt.html">
+    <div class="modal-header">
+      <h3 class="modal-title custom-font"><strong>{{ 'CRUD.DELETE' | translate }}</strong>&nbsp;{{ 'LABELS.DEVICE' | translate }}</h3>
+    </div>
+    <div class="modal-body text-center">
+      <p class="text-danger"><strong>{{('INFO.DELETE_DEVICE' | translate)}}</strong></p>
+      <div class="row"><strong>{{ 'LABELS.NAME' | translate }}:</strong> {{deleteDeviceName}}</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="deleteDeviceFromModel()"><i class="fa fa-arrow-right"></i> {{ 'BUTTONS.YES' | translate }}</button>
+      <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{ 'BUTTONS.NO' | translate }}</button>
+    </div>
+  </script>
+  <!-- Delete Sensor  -->
+  <!-- Add sensor   -->
+
+  <script type="text/ng-template" id="addDevicePrompt.html">
+    <div class="modal-header">
+      <h3 class="modal-title custom-font">
+   <strong>{{ 'CRUD.ADD' | translate }}</strong>&nbsp;{{ 'LABELS.DEVICES' | translate }}</h3>
+    </div>
+    <div class="modal-body">
+      <div alert-display />
+      <div class="tile-body table-custom">
+        <div class="table-responsive">
+          <table width="100%" datatable="" dt-options="showDevices.dtOptions" dt-columns="showDevices.dtColumns" dt-instance="showDevices.dtInstance" class="table table-custom">
+            <thead>
+              <tr>
+                <th class="bt-0">{{ 'LABELS.NAME' | translate }}</th>
+                <th class="bt-0">{{ 'LABELS.ACTION' | translate }}</th>
+                <th class="bt-0">
+                </th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        </form>
+      </div>
+    </div>
+</div>
+<div class="modal-footer">
+  <button type="submit" class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="submit(modelForm.$valid)" ng-disabled="modelForm.$invalid || selectedData.length == 0"><i class="fa fa-arrow-right"></i>{{Add_or_Update_Model}}</button>
+  <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{ 'BUTTONS.NO' | translate }}</button>
+</div>
+</script>
+<!-- /Add Sensor -->
+<div class="pageheader">
+  <div class="page-bar">
+    <ul class="page-breadcrumb">
+      <li>
+        <a ui-sref="app.models" class="btn btn-brand-color"><i class="fa fa-arrow-left"></i> &nbsp;{{ 'BUTTONS.BACK_TO_MODELS' | translate }}</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<!-- page content -->
+<div class="pagecontent">
+  <!-- tile -->
+  <section class="tile" fullscreen="isFullscreen02">
+    <!-- tile header -->
+    <div class="tile-header dvd dvd-btm ">
+      <i class="fa fa-building"></i>&nbsp;&nbsp;<strong>{{modelDisplayName}}</strong>&nbsp;
+      <a title="Edit" href ng-click="editModelName();"><i class="fa fa-pencil-square-o"></i></a> &nbsp;&nbsp;
+      <ul class="controls">
+        <ul class="controls ">
+          <li class="dropdown" uib-dropdown on-toggle="toggled(open) ">
+            <a href uib-dropdown-toggle class="dropdown-toggle settings "><i class="fa fa-cog "></i></a>
+            <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+              <li>
+                <a href tile-control-toggle>
+                      <span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.MINIMIZE' | translate }}</span>
+                      <span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.EXPAND' | translate }}</span>
+                    </a>
+              </li>
+              <li>
+                <a href ng-click="modelInfo.dtInstance.reloadData()">
+                  <fa name="refresh"></fa> {{ 'LABELS.REFRESH' | translate }}
+                </a>
+              </li>
+              <li>
+                <a href tile-control-fullscreen ng-click="isFullscreen02 = !isFullscreen02">
+                  <fa name="expand"></fa> {{ 'LABELS.FULL_SCREEN' | translate }}
+                </a>
+              </li>
+              <li>
+                <a href tile-control-lightbox>
+                  <fa name="magnet"></fa> {{ 'LABELS.OPEN_IN_LIGHTBOX' | translate }}
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+    </div>
+    <!-- /tile header -->
+    <!-- tile body-->
+    <div class="tile-body">
+      <uib-tabset justified="true">
+        <uib-tab ng-repeat="tab in tabs" select="setTabContent(tab.content)">
+          <uib-tab-heading>
+            <strong>{{tab.heading}}</strong>
+          </uib-tab-heading>
+        </uib-tab>
+        <ng-include src="tabContentUrl"></ng-include>
+      </uib-tabset>
+    </div>
+  </section>
+  <!-- /tile -->
+</div>
+<!-- /page content -->
+</div>

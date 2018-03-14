@@ -1,0 +1,16 @@
+{
+  "Config": {
+    "APP_ID": "c3da7774",
+    "APP_KEY": "4eec2bed1ce089e0589dbf2cd4bb6537",
+    "SUCCESS": "Success",
+    "FAIL": "Fail",
+    "HEADERS": {
+      "X-Kii-AppID": "c3da7774",
+      "X-Kii-AppKey": "4eec2bed1ce089e0589dbf2cd4bb6537",
+      "Content-Type": "application/json"
+    },
+    "LOGIN": {
+      "method": "login"
+    }
+  }
+}

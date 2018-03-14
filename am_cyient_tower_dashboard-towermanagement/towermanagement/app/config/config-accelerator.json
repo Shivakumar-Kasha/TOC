@@ -1,0 +1,16 @@
+{
+  "brandName": "AssetMonitoring",
+  "app": {
+    "id": "lxd3aidkoc35",
+    "key": "93dc7ef3da5c4a2db2a15477a43cbbdd",
+    "url": "//api-vw01u.kiiapps.com/api"
+  },
+  "rules": {
+    "url": "multiassetmonitoring",
+    "package": "multiassetmonitoring",
+    "repo": "MultiAssetMonitoring"
+  },
+  "deploymentUrl": "https://accelerators.kiibeta.com",
+  "googleMapKey": "AIzaSyCx_ZaqWDu6leZ7ffeIz5sG9qrN5s4KFF0",
+  "debugEnabled": true
+}

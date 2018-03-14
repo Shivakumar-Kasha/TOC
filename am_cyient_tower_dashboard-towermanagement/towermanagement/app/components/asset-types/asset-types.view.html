@@ -1,0 +1,114 @@
+<!--
+@Date:   02-21-2017 10:02:55
+@Project: AssetMonitoring
+@Last modified time: 04-12-2017 12:04:71
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<div class="page page-datatables">
+  <!-- page content -->
+  <div class="pagecontent">
+    <!-- row -->
+    <div class="row">
+      <!-- col -->
+      <div class="col-md-12">
+        <!-- Delete  Asset Type-->
+        <script type="text/ng-template" id="deleteAssetTypePrompt.html">
+          <div class="modal-header">
+            <h3 class="modal-title custom-font"><strong>{{'CRUD.DELETE' | translate}}</strong>&nbsp;{{ 'LABELS.ASSETTYPE' | translate }}</h3>
+          </div>
+          <div class="modal-body text-center">
+            <p class="text-danger"><strong>{{('INFO.DELETE_ASSETTYPE' | translate)}}</strong></p>
+            <div class="row"><strong>{{ 'LABELS.NAME' | translate }}: </strong> {{assetTypeNameToDelete}}</div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="deleteAssetType()"><i class="fa fa-arrow-right"></i> {{ 'BUTTONS.YES' | translate }}</button>
+            <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{ 'BUTTONS.NO' | translate }}</button>
+          </div>
+        </script>
+        <!-- Delete  Asset Type-->
+        <!-- Add Asset Type -->
+        <script type="text/ng-template" id="addAssetTypePrompt.html">
+          <div class="modal-header">
+            <h3 class="modal-title custom-font">
+                            <strong>{{Add_or_Update_Asset}}</strong>&nbsp;{{ 'LABELS.ASSETTYPE' | translate }}</h3>
+          </div>
+          <div class="modal-body">
+            <form name="assetTypeForm" ng-submit="submit()" role="form" novalidate>
+              <div alert-display />
+              <div class="form-group" ng-class="{ 'has-error' : assetTypeForm.assetType.$invalid && !assetTypeForm.assetType.$pristine, 'has-success' : assetTypeForm.assetType.$valid && !assetTypeForm.assetType.$pristine}" required>
+                <label for="assetType">{{ 'LABELS.NAME' | translate }}: </label>
+                <input type="text" name="assetType" id="assetType" placeholder="{{ ('PLACE_HOLDERS.ENTER_NAME' | translate) + ' ' +  ('PLACE_HOLDERS.MANDATORY' | translate)}}" class="form-control" ng-model="assetTypes" focus-me="true">
+                <p class="help-block">
+                  <span ng-show="assetTypeForm.assetType.$invalid && !assetTypeForm.assetType.$pristine">{{ 'HELP_TEXT.ENTER_NAME' | translate }}</span>
+                </p>
+              </div>
+              <br>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="submit(assetTypeForm.$valid)" ng-disabled="assetTypeForm.$invalid"><i class="fa fa-arrow-right"></i>{{Add_or_Update}}</button>
+            <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{ 'BUTTONS.CANCEL' | translate }}</button>
+          </div>
+          </form>
+      </div>
+      </script>
+      <!-- /Add Asset Type -->
+      <!-- tile -->
+      <section class="tile" fullscreen="isFullscreen02">
+        <!-- tile header -->
+        <div class="tile-header dvd dvd-btm">
+          <a href ng-click="openAddAssetTypePrompt('')" ng-show={{showMaster}}>
+            <h3><i class="fa fa-plus"></i> <strong>&nbsp;Add</strong>&nbsp;{{ 'LABELS.ASSETTYPE' | translate }}</h3>
+          </a>
+          <h3>&nbsp;</h3>
+          <ul class="controls">
+            <li class="dropdown" uib-dropdown on-toggle="toggled(open)">
+              <a href uib-dropdown-toggle class="dropdown-toggle settings"><i class="fa fa-cog"></i></a>
+              <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+                <li>
+                  <a href tile-control-toggle>
+                        <span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.MINIMIZE' | translate }}</span>
+                        <span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.EXPAND' | translate }}</span>
+                      </a>
+                </li>
+                <li>
+                  <a href ng-click="assetTypes.dtInstance.reloadData()">
+                    <fa name="refresh"></fa> {{ 'LABELS.REFRESH' | translate }}
+                  </a>
+                </li>
+                <li>
+                  <a href tile-control-fullscreen ng-click="isFullscreen02 = !isFullscreen02">
+                    <fa name="expand"></fa> {{ 'LABELS.FULL_SCREEN' | translate }}
+                  </a>
+                </li>
+                <li>
+                  <a href tile-control-lightbox>
+                    <fa name="magnet"></fa> {{ 'LABELS.OPEN_IN_LIGHTBOX' | translate }}
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <!-- /tile header -->
+        <!-- tile body -->
+        <div class="tile-body table-custom">
+          <table id="asset-types" name="asset-types" width="100%" datatable="" dt-options="assetTypes.dtOptions" dt-columns="assetTypes.dtColumns" dt-instance="assetTypes.dtInstance" class="table table-custom">
+            <thead>
+              <tr>
+                <th class="bt-0">{{ 'LABELS.NAME' | translate }}</th>
+                <th class="bt-0 text-center">{{ 'LABELS.ACTION' | translate }}</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <!-- /tile body -->
+      </section>
+      <!-- /tile -->
+    </div>
+    <!-- /col -->
+  </div>
+  <!-- /row -->
+</div>
+<!-- /page content -->
+</div>

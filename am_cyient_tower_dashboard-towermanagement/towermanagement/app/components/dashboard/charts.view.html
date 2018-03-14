@@ -1,0 +1,53 @@
+<!--
+@Date:   03-27-2017 15:03:75
+@Project: Asset Monitoring
+@Last modified time: 04-18-2017 14:04:41
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<div ng-controller="ChartsCtrl">
+
+  <!-- row -->
+  <div class="row">
+
+    <!-- col -->
+    <div class="col-md-6" style="height:350px;" ng-init="getAlertStatus()">
+
+      <h4 class="custom-font"><strong>{{ 'DASHBOARD.TITLE.STATUS_CHART' | translate }}</strong></h4>
+      <!-- tile -->
+      <!-- tile header -->
+      <!-- /tile header -->
+
+      <!-- tile body -->
+      <section class="tile-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div google-chart chart="alertStatus"></div>
+          </div>
+        </div>
+      </section>
+      <!-- /tile body -->
+      <!-- /tile -->
+    </div>
+    <!-- /col -->
+
+    <!-- col -->
+    <div class="col-md-6" style="height:350px;" ng-init="getIssueTypes()">
+
+      <h4 class="custom-font"><strong>{{ 'DASHBOARD.TITLE.ISSUES_CHART' | translate }}</strong></h4>
+      <!-- tile -->
+      <!-- tile body -->
+      <section class="tile-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div google-chart chart="issueTypes"></div>
+          </div>
+        </div>
+      </section>
+      <!-- /tile body -->
+      <!-- /tile -->
+    </div>
+    <!-- /col -->
+  </div>
+  <!-- /row -->
+</div>

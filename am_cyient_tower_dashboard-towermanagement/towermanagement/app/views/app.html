@@ -1,0 +1,16 @@
+<!--
+@Date:   01-27-2017 12:01:17
+@Project: 24/7PizzaBOX
+@Last modified time: 04-17-2017 16:04:38
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<section ng-include="'views/header.html'" id="header" class="{{main.settings.navbarHeaderColor}}"></section>
+<div id="controls">
+  <aside ng-include="'views/nav.html'" id="sidebar" style="background-color: transparent !important; height: 100vh;" class="{{main.settings.sidebarColor}}" ng-class="{'aside-fixed':main.settings.asideFixed}"></aside>
+  <aside ng-include="'views/rightbar.html'" id="rightbar"></aside>
+</div>
+<div class="view-container" ui-view-container>
+  <section ui-view id="content" autoscroll="false"></section>
+</div>
+<section ng-include="'views/footer.html'" id="footer" class="{{main.settings.navbarFooterColor}}"></section>

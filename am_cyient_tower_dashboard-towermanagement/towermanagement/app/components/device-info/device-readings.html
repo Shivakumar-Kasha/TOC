@@ -1,0 +1,58 @@
+<!--
+@Date:   03-27-2017 12:03:77
+@Project: AssetMonitoring
+@Last modified time: 04-11-2017 15:04:31
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<section class="tile tile-simple table-custom mb-0" ng-controller="EditDeviceReadingsCtrl">
+  <!-- tile body -->
+  <div class="tile-body">
+    <form name="readingsForm" role="form" class="form-validation" novalidate>
+      <br>
+
+      <fieldset data-ng-repeat="readings in readingsArray">
+        <div class="form-group col-md-3" ng-class="{ 'has-error' : readingsForm.label.$invalid && !readingsForm.label.$pristine, 'has-success' : propertiesForm.label.$valid && !propertiesForm.label.$pristine}">
+          <label for="name">{{ 'LABELS.DISPLAYNAME' | translate }}: </label>
+          <input type="text" name="name" id="name" class="form-control" value="Name" ng-model="template.form[readings].displayName" ng-change="copyText(template.form[readings].displayName, readings)" required>
+          <p class="help-block">
+            <span ng-show="readingsForm.label.$invalid && !readingsForm.label.$pristine">{{ 'HELP_TEXT.LABEL_REQUIRED' | translate }}</span>
+          </p>
+        </div>
+        <div class="form-group col-md-2" ng-class="{ 'has-error' : readingsForm.label.$invalid && !readingsForm.label.$pristine, 'has-success' : propertiesForm.label.$valid && !propertiesForm.label.$pristine}">
+          <label for="units">{{ 'LABELS.UNIT' | translate }}: </label>
+          <input type="text" name="units" id="units" class="form-control" value="units" ng-model="template.form[readings].units">
+          <p class="help-block">
+            <span ng-show="readingsForm.label.$invalid && !readingsForm.label.$pristine">{{ 'HELP_TEXT.LABEL_REQUIRED' | translate }}</span>
+          </p>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="name">{{ 'LABELS.TYPE' | translate }}:</label>
+          <select chosen="{width: '100%'}" class="form-control mb-10" ng-model="template.form[readings].readingType" data-placeholder-text-single="'Choose Type'" required>
+                                  <option value="">Choose Type</option>
+                                  <option value="string">String</option>
+                                  <option value="number">Number</option>
+                                  <option value="date">Date</option>
+                                    <option value="boolean">Boolean</option>
+                              </select>
+        </div>
+        <div class="form-group col-md-3" ng-class="{ 'has-error' : readingsForm.label.$invalid && !readingsForm.label.$pristine, 'has-success' : readingsForm.label.$valid && !readingsForm.label.$pristine}">
+          <label for="name">{{ 'LABELS.ID' | translate }}: </label>
+          <input type="text" name="name" id="name" class="form-control" ng-model="template.form[readings].id" no-special-char required>
+          <p class="help-block">
+            <span ng-show="readingsForm.label.$invalid && !readingsForm.label.$pristine">{{ 'HELP_TEXT.LABEL_REQUIRED' | translate }}</span>
+          </p>
+        </div>
+        <div class="form-group col-md-1">
+          <label for="name" style="width: 100px;">&nbsp;</label>
+          <button title="Remove Property" class="btn btn-rounded btn-danger" ng-click="removeReadingKey(readings)" ng-disabled="{{showTenant}} || (readingsArray.length<2)||((template.form[readings].name).toUpperCase()=='ID' )||((template.form[readings].name).toUpperCase()=='NAME' )"><i class="fa fa-minus" aria-hidden="true"></i></button>
+        </div>
+
+      </fieldset>
+      <hr ng-show={{showMaster}}>
+      <button title="Add Reading" class="btn btn-success btn-rounded" ng-click="addReadingKey()" ng-disabled="(keys.length>= max_model_properties)" ng-show={{showMaster}}><i class="fa fa-plus" aria-hidden="true"></i></button>
+      <button style="float: right;" class="btn btn-brand-color btn-rounded" ng-show={{showMaster}} ng-disabled="readingsForm.$invalid" ng-click="submit()"> {{ 'BUTTONS.UPDATE' | translate }}</button>
+    </form>
+  </div>
+  <!-- /tile body -->
+</section>

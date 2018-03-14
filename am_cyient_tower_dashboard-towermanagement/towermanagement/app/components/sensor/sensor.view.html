@@ -1,0 +1,153 @@
+<!--
+@Date:   01-30-2017 16:01:59
+@Project: AssetMonitoring
+@Last modified time: 04-14-2017 17:04:32
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<div class="page page-datatables">
+  <!-- page content -->
+  <div class="pagecontent">
+    <!-- row -->
+    <div class="row">
+      <!-- col -->
+      <div class="col-md-12">
+        <!-- add sensor prompt -->
+        <script type="text/ng-template" id="addSensorPrompt.html">
+          <div class="modal-header">
+            <h3 class="modal-title custom-font"><strong>{{Add_OR_EDIT_SENSOR}} </strong>&nbsp;{{ 'LABELS.SENSOR' | translate }}</h3>
+          </div>
+          <div class="modal-body">
+            <form name="addSensorForm" ng-submit="submit()" novalidate>
+              <div alert-display />
+              <div class="row">
+                <div class="form-group col-md-6" ng-class="{ 'has-error' : addSensorForm.c_name.$invalid && !addSensorForm.c_name.$pristine, 'has-success' : addSensorForm.c_name.$valid && !addSensorForm.c_name.$pristine}" required>
+                  <label for="c_name">{{ 'LABELS.NAME' | translate }}: </label>
+                  <input type="text" name="c_name" id="c_name" placeholder="{{ ('PLACE_HOLDERS.ENTER_NAME' | translate) + ' ' +  ('PLACE_HOLDERS.MANDATORY' | translate)}}" class="form-control" ng-model="sensor.c_name" ng-maxlength="30" focus-me="true" ng-pattern="/^[^`~!@#$%\^&*()+={}|[\]\\:';<>?,./]*$/">
+                  <p class="help-block">
+                    <span ng-show="addSensorForm.c_name.$invalid && !addSensorForm.c_name.$pristine">{{ 'HELP_TEXT.ENTER_NAME' | translate }}</span>
+                  </p>
+                </div>
+                <div class="form-group col-md-6" required>
+                  <label for="show">{{ 'LABELS.SENSOR_TYPE' | translate }}:</label>
+                  <select  chosen="{width: '100%'}" class="form-control"  ng-model="sensor.sensorType" data-placeholder-text-single="'{{'PLACE_HOLDERS.CHOOSE_SENSORTYPE' | translate}}'" ng-options="a.option as a.view for a in sensorTypeOptions | orderBy:'view'">
+                  <option value="">{{ ('PLACE_HOLDERS.CHOOSE_SENSORTYPE' | translate)}}</option>
+                                     </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-md-6" ng-class="{ 'has-error' : addSensorForm.units.$invalid && !addSensorForm.units.$pristine, 'has-success' : addSensorForm.units.$valid && !addSensorForm.units.$pristine}" required>
+                  <label for="units">{{ 'LABELS.UNITS' | translate }}: </label>
+                  <input type="text" name="units" id="units" placeholder="{{ ('PLACE_HOLDERS.ENTER_UNITS' | translate) + ' ' +  ('PLACE_HOLDERS.MANDATORY' | translate)}}" class="form-control" ng-model="sensor.units">
+                  <p class="help-block">
+                    <span ng-show="addSensorForm.units.$invalid && !addSensorForm.units.$pristine">{{ 'HELP_TEXT.VALID_UNITS' | translate }}</span>
+                  </p>
+                </div>
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="submit(addSensorForm.$valid)" ng-disabled="addSensorForm.$invalid"><i class="fa fa-arrow-right"></i> {{Add_or_Update}}</button>
+        <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> Cancel</button>
+      </div>
+      </form>
+      </script>
+      <!-- /add sensor prompt -->
+      <!-- delete sensor prompt -->
+      <script type="text/ng-template" id="deleteSensorPrompt.html">
+        <div class="modal-header">
+          <h3 class="modal-title custom-font"><strong>{{'CRUD.DELETE' | translate}}</strong>&nbsp;{{ 'LABELS.SENSOR' | translate }}</h3>
+        </div>
+        <div class="modal-body text-center">
+          <p class="text-danger"><strong>{{('INFO.DELETE_SENSOR' | translate)}}</strong></p>
+          <div class="row"><strong>{{'LABELS.NAME' | translate }}: </strong> {{sensorNameToDelete}}</div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="deleteSensor()"><i class="fa fa-arrow-right"></i> {{ 'CRUD.DELETE' | translate }}</button>
+          <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{ 'BUTTONS.CANCEL' | translate }}</button>
+        </div>
+      </script>
+      <!-- /delete sensor prompt -->
+
+        <!-- Show model list prompt -->
+      <script type="text/ng-template" id="modelListPrompt.html">
+        <div class="modal-header">
+          <h3 class="modal-title custom-font"><strong>{{ 'Menu.MODELS' | translate }}</strong>&nbsp;</h3>
+        </div>
+        <div class="modal-body">
+       <h4>{{ 'INFO.UNASSIGN_SENSOR_FROM_MODEL' | translate }}</h4>
+        <div class="tile-body table-custom">
+          <table id="modelList" name="modelList" width="100%" datatable="" dt-options="modelsListInfo.dtOptions" dt-columns="modelsListInfo.dtColumns" dt-instance="modelsListInfo.dtInstance" class="table table-custom">
+            <thead>
+              <tr>
+                <th class="bt-0">{{ 'LABELS.NAME' | translate }}</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <!-- /tile body -->
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> {{ 'BUTTONS.CANCEL' | translate }}</button> 
+        </div>
+      </script>
+      <!-- /Show model list prompt-->
+
+      <!-- tile -->
+      <section class="tile" fullscreen="isFullscreen02">
+        <!-- tile header -->
+        <div class="tile-header dvd dvd-btm">
+          <a href ng-click="addSensor('')" ng-show={{showMaster}}><h3><i class="fa fa-plus"></i> <strong>&nbsp;{{ 'CRUD.ADD' | translate }}</strong>&nbsp;{{ 'LABELS.SENSOR' | translate }}</h3></a>
+          <h3>&nbsp;</h3>
+          <ul class="controls">
+            <li class="dropdown" uib-dropdown on-toggle="toggled(open)">
+              <a href uib-dropdown-toggle class="dropdown-toggle settings"><i class="fa fa-cog"></i></a>
+              <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+                <li>
+                  <a href tile-control-toggle>
+                        <span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.MINIMIZE' | translate }}</span>
+                        <span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.EXPAND' | translate }}</span>
+                      </a>
+                </li>
+                <li>
+                  <a href ng-click="sensorInfo.dtInstance.reloadData()">
+                    <fa name="refresh"></fa> {{ 'LABELS.REFRESH' | translate }}
+                  </a>
+                </li>
+                <li>
+                  <a href tile-control-fullscreen ng-click="isFullscreen02 = !isFullscreen02">
+                    <fa name="expand"></fa> {{ 'LABELS.FULL_SCREEN' | translate }}
+                  </a>
+                </li>
+                <li>
+                  <a href tile-control-lightbox>
+                    <fa name="magnet"></fa> {{ 'LABELS.OPEN_IN_LIGHTBOX' | translate }}
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <!-- /tile header -->
+        <!-- tile body -->
+        <div class="tile-body table-custom">
+          <table id="sensor" name="sensor" width="100%" datatable="" dt-options="sensorInfo.dtOptions" dt-columns="sensorInfo.dtColumns" dt-instance="sensorInfo.dtInstance" class="table table-custom">
+            <thead>
+              <tr>
+                <th class="bt-0">{{ 'LABELS.NAME' | translate }}</th>
+                <th class="bt-0">{{ 'LABELS.UNITS' | translate }}</th>
+                <th class="bt-0 text-center">{{ 'LABELS.ACTION' | translate }}</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <!-- /tile body -->
+      </section>
+      <!-- /tile -->
+    </div>
+    <!-- /col -->
+  </div>
+  <!-- /row -->
+</div>
+<!-- /page content -->
+</div>

@@ -1,0 +1,62 @@
+<!--
+@Date:   03-27-2017 12:03:22
+@Project: 24/7PizzaBOX
+@Last modified time: 04-11-2017 15:04:62
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<!-- tile -->
+<section class="tile" fullscreen="isFullscreen02" ng-controller="AssignedAssetsToZoneCtrl as assignedAssets">
+  <!-- tile header -->
+  <div class="tile-header dvd dvd-btm">
+    <a href ng-click="assignAssetPopup();">
+      <h3><i class="fa fa-plus"></i>&nbsp;<strong>{{'LABELS.ASSIGN' | translate}}</strong>&nbsp;{{ 'Menu.ASSETTYPES' | translate }}</h3>
+    </a>
+    <!--<a style="float:right; margin-right:30px;" href="" ng-click=""><i class="" aria-hidden="true"></i>&nbsp;<strong>Bins</strong></a>
+                            <a style="float:right; margin-right:2px; height: 20px;  border-right: solid #95a2a9;" href="" ng-click=""><i class="" aria-hidden="true"></i>&nbsp;<strong>Users</strong>&nbsp;&nbsp;</a>-->
+    <ul class="controls">
+      <li class="dropdown" uib-dropdown on-toggle="toggled(open)">
+        <a href uib-dropdown-toggle class="dropdown-toggle settings"><i class="fa fa-cog"></i></a>
+        <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+          <li>
+            <a href tile-control-toggle>
+                  <span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.MINIMIZE' | translate }}</span>
+                  <span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.EXPAND' | translate }}</span>
+                </a>
+          </li>
+          <li>
+            <a href ng-click="assignedAssets.dtInstance.reloadData()">
+              <fa name="refresh"></fa> {{ 'LABELS.REFRESH' | translate }}
+            </a>
+          </li>
+          <li>
+            <a href tile-control-fullscreen ng-click="isFullscreen02 = !isFullscreen02">
+              <fa name="expand"></fa> {{ 'LABELS.FULL_SCREEN' | translate }}
+            </a>
+          </li>
+          <li>
+            <a href tile-control-lightbox>
+              <fa name="magnet"></fa> {{ 'LABELS.OPEN_IN_LIGHTBOX' | translate }}
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <!-- /tile header -->
+  <!-- tile body -->
+  <div class="tile-body table-custom">
+    <table id="zone-assigned-vms" name="zone-assigned-vms" width="100%" datatable="" dt-options="assignedAssets.dtOptions" dt-columns="assignedAssets.dtColumns" dt-instance="assignedAssets.dtInstance" class="table table-custom">
+      <thead>
+        <tr>
+          <th width="20%" class="bt-0">{{'LABELS.NAME' | translate}}</th>
+          <th width="20%" class="bt-0">{{'LABELS.ADDRESS' | translate}}</th>
+          <th width="20%" class="bt-0 text-center">{{'LABELS.ACTION' | translate}}
+          </th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <!-- /tile body -->
+</section>
+<!-- /tile -->

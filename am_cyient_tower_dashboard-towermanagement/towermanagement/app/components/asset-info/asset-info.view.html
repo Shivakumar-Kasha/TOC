@@ -1,0 +1,161 @@
+<!--
+@Date:   02-16-2017 11:02:19
+@Project: AssetMonitoring
+@Last modified time: 04-18-2017 20:04:52
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<div class="page page-datatables">
+  <!-- trend Graph Info PopUp Prompt -->
+  <script type="text/ng-template" id="trendGraphInfoPopUpPrompt.html">
+    <div class="modal-header">
+      <h3 class="modal-title custom-font">
+            <strong>{{sensorName}}</strong>
+        </h3>
+    </div>
+    <div class="modal-body" ng-init="getSensorReadings(false);">
+      <form class="form-inline" role="form">
+        <div class="form-group">
+          <label for="from-date"><strong>{{'LABELS.FROM' | translate}}&nbsp;</strong></label>
+          <div id="from-date" class="input-group w-md">
+            <input type="text" ng-model="trend.fromDate" class="form-control" uib-datepicker-popup="{{format}}" is-open="opened_from" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+            <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event, 'from')" ><i class="glyphicon glyphicon-calendar"></i></button>
+                          </span>
+          </div>
+        </div>
+        &nbsp;
+        <div class="form-group">
+          <label for="to-date"><strong>{{'LABELS.TO' | translate}}&nbsp;</strong></label>
+          <div id="to-date" class="input-group w-md">
+            <input type="text" ng-model="trend.toDate" class="form-control" uib-datepicker-popup="{{format}}" is-open="opened_to" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+            <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event, 'to')" ><i class="glyphicon glyphicon-calendar"></i></button>
+                          </span>
+          </div>
+        </div>
+        &nbsp;
+        <div class="form-group">
+          <label for="show-entries"><strong>{{'LABELS.SHOW' | translate}}</strong></label>
+          <select id="show-entries" ng-model="trend.length" class="form-control" ng-change="searchSensorReadings();">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="40">40</option>
+                                </select><label for="show-entries"><strong>{{'LABELS.ENTRIES' | translate}}</strong></label>
+        </div>
+        &nbsp;
+        <button type="button" class="btn btn-brand-color btn-rounded" id="refreshBtn" ng-click="searchSensorReadings();">{{ 'BUTTONS.REFRESH' | translate }}</button>
+      </form>
+      <hr class="line-dashed line-half" />
+      <!-- <div morris-area-chart line-data='allSensorReadingData' line-xkey='x' line-ykeys='["y"]' line-labels='["Sensor Reading"]' line-colors='["#4f81bc"]' style="height: 250px;" show-grid='true' resize=true></div> -->
+
+      <div morris-area-chart line-data='sensorReadings' line-xkey='time' line-ykeys='["reading"]' line-labels='["Sensor Reading"]' line-colors='["#4f81bc"]' line-postUnits='{{" " + sensorUnits}}' fill-opacity='.5' show-grid='true' style="height: 250px">
+
+      </div>
+
+      <!-- <div morris-line-chart line-data='allSensorReadingData' line-xkey='x' line-ykeys='["y"]' line-labels='["Sensor Reading"]' line-colors='["#a2d200"]' line-postUnits='{{"" + sensorUnits}}' line-width='2' fill-opacity='.5' show-grid='true' style="height: 250px"></div> -->
+      <!-- <div class="col-md-1"></div>
+            <div class="col-md-1" ng-disabled="!prevKeyFlag">
+              <a href ng-click="trendGraphNext('prev')" class="introjs-button introjs-prevbutton"><i class="fa fa-chevron-left"></i> Previous</a>
+            </div>
+            <div class="col-md-7">
+              <div ng-show="noDataAvailable.length>0" class="text-center">
+                <h4>{{noDataAvailable}}</h4></div>&nbsp;
+            </div>
+            <div class="col-md-1" ng-disabled="!nextKeyFlag">
+              <a href ng-click="trendGraphNext('next')" class="introjs-button introjs-nextbutton">Next <i class="fa fa-chevron-right"></i></a>
+            </div> -->
+
+      <ul class="pager ng-pristine ng-untouched ng-valid ng-isolate-scope ng-empty" total-items="totalItems" ng-model="currentPage" aria-invalid="false" style="">
+        <li class="{{((!prevKeyFlag)?'disabled':'')}} previous" style=""><a href="" ng-click="trendGraphNext('prev')" class="ng-binding">« {{'BUTTONS.PREVIOUS' | translate}}</a></li>
+        <li class="{{((!(paginationKey !== '' && pagingData.countPrev > 0))?'disabled':'')}} next" style=""><a href="" ng-click="trendGraphNext('next')" class="ng-binding">{{'BUTTONS.NEXT' | translate}} »</a></li>
+      </ul>
+      <!-- <uib-pager ng-disabled="true" total-items="totalItems" ng-model="currentPage"></uib-pager> -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-lightred btn-ef btn-ef-3 btn-ef-3c ng-binding" ng-click="cancel()">
+                        <i class="fa fa-arrow-left"></i> {{'BUTTONS.CLOSE' | translate}}
+                    </button>
+    </div>
+  </script>
+  <!-- /trend Graph Info PopUp Prompt -->
+  <!-- page header -->
+  <div class="pageheader">
+    <div class="page-bar" style="">
+      <div class="row">
+        <div class="col-md-8" style="margin-top:12px;">
+          <ul class="page-breadcrumb">
+            <li>
+              <a ui-sref="app.dashboard" class="btn btn-brand-color"><i class="fa fa-arrow-left"></i> &nbsp;{{ 'BUTTONS.BACK_TO_DASHBOARD' | translate }}</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-4 text-center">
+          <!-- <div class="col-md-4" ng-repeat="item in imageData | limitTo:-3">{{imageUrls(item._customInfo)}}
+            <img src="{{imageUrl}}" ng-init="init(item._customInfo.c_name)" title="{{item._customInfo.c_name}} - &nbsp;{{sensorReading}}" style="height: 30px;">
+            <p><span class="inline-text">{{item._customInfo.c_name}}</span><br>
+              <span class="inline-text">{{sensorReading}}</span></p>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /page header -->
+  <!-- page content -->
+  <div class="pagecontent">
+    <!-- tile -->
+    <section class="tile" fullscreen="isFullscreen02">
+      <!-- tile header -->
+      <div class="tile-header dvd dvd-btm ">
+        <i class="fa fa-building"></i>&nbsp;&nbsp;<strong>{{assetsName}}</strong></h1>
+
+        <ul class="controls ">
+          <li class="dropdown" uib-dropdown on-toggle="toggled(open) ">
+            <a href uib-dropdown-toggle class="dropdown-toggle settings "><i class="fa fa-cog "></i></a>
+            <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+              <li>
+                <a href tile-control-toggle>
+                     <span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.MINIMIZE' | translate }}</span>
+                     <span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;{{ 'LABELS.EXPAND' | translate }}</span>
+                   </a>
+              </li>
+              <li>
+                <a href ng-click="">
+                  <fa name="refresh"></fa> {{ 'LABELS.REFRESH' | translate }}
+                </a>
+              </li>
+              <li>
+                <a href tile-control-fullscreen ng-click="isFullscreen02 = !isFullscreen02">
+                  <fa name="expand"></fa> {{ 'LABELS.FULL_SCREEN' | translate }}
+                </a>
+              </li>
+              <li>
+                <a href tile-control-lightbox>
+                  <fa name="magnet"></fa> {{ 'LABELS.OPEN_IN_LIGHTBOX' | translate }}
+                </a>
+              </li>
+            </ul>
+        </ul>
+        </li>
+        </ul>
+      </div>
+      <!-- tile body-->
+
+      <!-- tile body-->
+      <div class="tile-body">
+        <uib-tabset justified="true">
+          <uib-tab ng-repeat="tab in tabs" select="setTabContent(tab.content)">
+            <uib-tab-heading>
+              <strong>{{tab.heading}}</strong>
+            </uib-tab-heading>
+          </uib-tab>
+          <ng-include src="tabContentUrl"></ng-include>
+        </uib-tabset>
+      </div>
+      <!-- /tile -->
+    </section>
+  </div>
+  <!-- /page content -->
+
+</div>

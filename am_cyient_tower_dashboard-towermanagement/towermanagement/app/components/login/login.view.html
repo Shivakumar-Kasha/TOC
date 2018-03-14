@@ -1,0 +1,39 @@
+<!--
+@Date:   01-27-2017 12:01:52
+@Project: 24/7PizzaBOX
+@Last modified time: 04-20-2017 10:04:09
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<div class="page page-forms-common">
+  <!-- <div class="text-center">
+        <h3 class="text-light text-white"><img src="images/vendor/vendor.png" alt="{{ main.title }}"></h3>
+    </div> -->
+  <div class="container w-420 p-15 bg-white mt-40">
+    <div class="text-center">
+      <h3 class="text-light text-white"><img style="max-width: 100%;" src="images/vendor/logo-white.png" alt="{{ main.title }}"></h3>
+      <hr class="b-3x">
+      <h5 class="text-light brand-color"><strong>{{'LABELS.LOGIN_TO_CONTINUE' | translate}}</strong></h5>
+    </div>
+    <form name="loginForm" class="form-validation mt-20" ng-controller="FormsValidateCtrl" novalidate>
+      <div alert-display />
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
+        <input type="email" class="form-control" id="username" name="username" ng-model="loginInfo.userMail" ng-pattern="emailPattern" placeholder="{{ ('PLACE_HOLDERS.ENTER_USER_NAME' | translate)}}" required>
+      </div>
+      <br/>
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
+        <input type="password" class="form-control" id="password" ng-model="loginInfo.userPassword" placeholder="{{ ('PLACE_HOLDERS.ENTER_PASSWORD' | translate)}}" required>
+      </div>
+      <div class="form-group text-left mt-20">
+        <button type="submit" class="btn btn-brand-color b-0 br-2 mr-5" ng-click="login(user)" ng-disabled="loginForm.$invalid" disabled="disabled">{{'BUTTONS.LOGIN' | translate}}</button>
+        <a ui-sref="core.forgot-pass" class="pull-right mt-10" href>{{'LABELS.FORGOT_PASSWORD' | translate}}</a>
+      </div>
+      <hr class="b-3x">
+      <div class="lt wrap-reset text-center">
+        <b class="text-black"> © {{copyrightYear}} <a onclick="window.open('//kii.com/')" title="" style="cursor: pointer;">Kii</a>. {{'HELP_TEXT.ALL_RIGHTS_RESERVED' | translate}} </b>
+      </div>
+    </form>
+  </div>
+</div>

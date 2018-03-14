@@ -1,0 +1,18 @@
+{
+  "brandName": "AssetMonitoring",
+  "deploymentName": "aj-assetmonitoring",
+  "deploymentArchiveType": "tar",
+  "app": {
+    "id": "ahsvexc8vpqv",
+    "key": "0a6baa62083e4b638b345854c1861e78",
+    "url": "//api-staging-saus.internal.kii.com/api"
+  },
+  "rules": {
+    "url": "multiassetmonitoring",
+    "package": "multiassetmonitoring",
+    "repo": "MultiAssetMonitoring"
+  },
+  "deploymentUrl": "https://test.kiibeta.com",
+  "googleMapKey": "AIzaSyCx_ZaqWDu6leZ7ffeIz5sG9qrN5s4KFF0",
+  "debugEnabled": true
+}

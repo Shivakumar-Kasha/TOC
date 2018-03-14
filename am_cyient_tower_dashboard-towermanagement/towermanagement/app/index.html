@@ -1,0 +1,300 @@
+<!--
+@Date:   02-25-2016 13:02:00
+@Project: Asset Monitoring
+@Last modified time: 04-19-2017 17:04:65
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<!doctype html>
+<html ng-controller="MainCtrl" class="no-js {{main.settings.brandingColor}}">
+
+<head>
+  <meta charset="utf-8">
+  <title>{{ productName }}</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <link rel="icon" type="image/ico" href="images/vendor/favicon.ico" />
+  <!-- build:css(.) styles/vendor.min.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/angular-bootstrap-colorpicker/css/colorpicker.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="bower_components/angular-bootstrap-nav-tree/dist/abn_tree.css" />
+  <link rel="stylesheet" href="bower_components/chosen/chosen.min.css" />
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="bower_components/intro.js/introjs.css" />
+  <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
+  <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+  <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.css" />
+  <link rel="stylesheet" href="bower_components/fullcalendar/fullcalendar.css" />
+  <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
+  <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css" />
+  <link rel="stylesheet" href="bower_components/angular-ui-tree/dist/angular-ui-tree.min.css" />
+  <link rel="stylesheet" href="bower_components/animate.css/animate.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-daterangepicker/daterangepicker.css" />
+  <link rel="stylesheet" href="bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.css" />
+  <link rel="stylesheet" href="bower_components/morrisjs/morris.css" />
+  <link rel="stylesheet" href="bower_components/ng-table/dist/ng-table.css" />
+  <link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.min.css" />
+  <link rel="stylesheet" href="bower_components/ngImgCrop/compile/minified/ng-img-crop.css" />
+  <link rel="stylesheet" href="bower_components/owl.carousel/dist/assets/owl.carousel.min.css" />
+  <link rel="stylesheet" href="bower_components/owl.carousel/dist/assets/owl.theme.default.css" />
+  <link rel="stylesheet" href="bower_components/simple-line-icons/css/simple-line-icons.css" />
+  <link rel="stylesheet" href="bower_components/weather-icons/css/weather-icons.css" />
+  <link rel="stylesheet" href="bower_components/weather-icons/css/weather-icons.min.css" />
+  <link rel="stylesheet" href="bower_components/weather-icons/css/weather-icons-wind.css" />
+  <link rel="stylesheet" href="bower_components/weather-icons/css/weather-icons-wind.min.css" />
+  <link rel="stylesheet" href="bower_components/dragular/dist/dragular.min.css" />
+  <link rel="stylesheet" href="bower_components/magnific-popup/dist/magnific-popup.css" />
+  <link rel="stylesheet" href="bower_components/intl-tel-input/build/css/intlTelInput.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css(.tmp) styles/main.min.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/common.css">
+  <!-- endbuild -->
+</head>
+<!-- Session Logout Prompt -->
+<script type="text/ng-template" id="sessionLogoutPrompt.html">
+  <div class="modal-header text-center">
+    <h3 class="modal-title custom-font"><strong>{{'LABELS.SESSION_EXPIRED' | translate}}</strong></h3>
+  </div>
+  <div class="modal-body text-center">
+    <p><strong>{{message}}</strong></p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="logout()"><i class="fa fa-arrow-right"></i>{{'BUTTONS.OK' | translate}}</button>
+  </div>
+</script>
+<!-- /Session Logout Prompt -->
+<!-- Reset Password Prompt -->
+<script type="text/ng-template" id="resetPasswordPrompt.html">
+  <div class="modal-header text-center">
+    <h3 class="modal-title custom-font"><b>{{'LABELS.UPDATE_PASSWORD' | translate}}</b></h3>
+  </div>
+  <div class="modal-body">
+    <form name="resetPasswordForm" ng-submit="submit()" role="form" novalidate>
+      <div class="form-group col-md-12" ng-class="{ 'has-error' : resetPasswordForm.currentPassword.$invalid && !resetPasswordForm.currentPassword.$pristine, 'has-success' : resetPasswordForm.currentPassword.$valid && !resetPasswordForm.currentPassword.$pristine}"
+        required>
+        <label for="currentPassword">{{'LABELS.CURRENT_PASSWORD' | translate}}: </label>
+        <input type="password" name="currentPassword" id="currentPassword" placeholder="{{ ('PLACE_HOLDERS.ENTER_CURRENT_PASSWORD' | translate) + ' ' +  ('PLACE_HOLDERS.MANDATORY' | translate)}}" class="form-control" ng-model="reset.currentPassword" ng-minlength="4"
+          ng-maxlength="50" focus-me="true">
+        <p class="help-block">
+          <span ng-show="resetPasswordForm.currentPassword.$error.minlength">{{ 'HELP_TEXT.PASSWORD_TOO_SHORT' | translate }}</span>
+          <span ng-show="resetPasswordForm.currentPassword.$error.maxlength">{{ 'HELP_TEXT.PASSWORD_TOO_LONG' | translate }}</span>
+        </p>
+      </div>
+      <div class="form-group col-md-6" ng-class="{ 'has-error' : resetPasswordForm.newPassword.$invalid && !resetPasswordForm.newPassword.$pristine, 'has-success' : resetPasswordForm.newPassword.$valid && !resetPasswordForm.newPassword.$pristine}" required>
+        <label for="newPassword">{{'LABELS.NEW_PASSWORD' | translate}}: </label>
+        <input type="password" name="newPassword" id="newPassword" placeholder="{{ ('PLACE_HOLDERS.ENTER_NEW_PASSWORD' | translate) + ' ' +  ('PLACE_HOLDERS.MANDATORY' | translate)}}" class="form-control" ng-model="reset.newPassword" ng-minlength="4" ng-maxlength="50">
+        <p class="help-block">
+          <span ng-show="resetPasswordForm.newPassword.$error.minlength">{{ 'HELP_TEXT.PASSWORD_TOO_SHORT' | translate }}</span>
+          <span ng-show="resetPasswordForm.newPassword.$error.maxlength">{{ 'HELP_TEXT.PASSWORD_TOO_LONG' | translate }}</span>
+        </p>
+      </div>
+      <div class="form-group col-md-6" ng-class="{ 'has-error' : resetPasswordForm.passwordConfirm.$invalid && !resetPasswordForm.passwordConfirm.$pristine, 'has-success' : resetPasswordForm.passwordConfirm.$valid && !resetPasswordForm.passwordConfirm.$pristine}"
+        required>
+        <label for="passwordConfirm">{{ 'LABELS.CONFIRM_PASSWORD' | translate }}: </label>
+        <input type="password" name="passwordConfirm" id="passwordConfirm" placeholder="{{ ('PLACE_HOLDERS.CONFIRM_NEW_PASSWORD' | translate) + ' ' +  ('PLACE_HOLDERS.MANDATORY' | translate)}}" class="form-control" ng-model="reset.passwordConfirm" ng-minlength="4"
+          ng-maxlength="50" ui-validate=" '$value==reset.newPassword' " ui-validate-watch=" 'reset.newPassword' ">
+        <p class="help-block">
+          <span ng-show='resetPasswordForm.passwordConfirm.$error.validator'>{{ 'HELP_TEXT.PASSWORD_NOT_MATCH' | translate }}</span>
+          <span ng-show="resetPasswordForm.passwordConfirm.$error.minlength">{{ 'HELP_TEXT.PASSWORD_TOO_SHORT' | translate }}</span>
+          <span ng-show="resetPasswordForm.passwordConfirm.$error.maxlength">{{ 'HELP_TEXT.PASSWORD_TOO_LONG' | translate }}</span>
+        </p>
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="submit()" ng-disabled="resetPasswordForm.$invalid"><i class="fa fa-arrow-right"></i>{{'BUTTONS.UPDATE' | translate}}</button>
+  </div>
+  </form>
+  </div>
+</script>
+<!-- /Reset Password Prompt -->
+
+<body id="Assetmanagement" class="{{main.settings.brandingColor}} {{main.settings.activeColor}} header-fixed footer-fixed aside-fixed rightbar-hidden appWrapper" ng-class="{'header-fixed': main.settings.headerFixed, 'header-static': !main.settings.headerFixed,'footer-fixed': main.settings.footerFixed, 'footer-static': !main.settings.footerFixed, 'aside-fixed': main.settings.asideFixed, 'aside-static': !main.settings.asideFixed, 'rightbar-show': main.settings.rightbarShow, 'rightbar-hidden': !main.settings.rightbarShow}">
+  <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+  <!-- Application content -->
+  <div id="wrap" ui-view autoscroll="false"></div>
+  <div ng-show="ajaxloading" style="display: block; position:fixed; top:0; botton: 0; right: 0; left:0; width:100%; height:100%; background-repeat : no-repeat; background-position : center; z-index:3000001; opacity: 0.8;">
+    <img src="images/flickr.gif" style="position: fixed; color: White; top: 50%; left: 50%; margin-left: -32px; margin-top: -32px; display: block;" />
+  </div>
+  <!-- Data Loading for Http Requests-->
+  <div data-loading>
+    <div style="display: block; position:fixed; color: White; top:0; botton: 0; right: 0; left:0; width:100%; height:100%; background-repeat : no-repeat; background-position : center; z-index: 3000001; opacity: 0.8;">
+      <img src="images/flickr.gif" style="position: absolute; color: White; top: 50%; left: 50%; margin-left: -32px; margin-top: -32px; display: block;" /></div>
+  </div>
+  <!-- <script src='//maps.googleapis.com/maps/api/js?key=AIzaSyCx_ZaqWDu6leZ7ffeIz5sG9qrN5s4KFF0&libraries=weather,geometry,visualization,places,drawing&sensor=false&language=en&v=3.25'></script> -->
+  <!-- <script src='//maps.googleapis.com/maps/api/js'> -->
+  <!-- build:js(.) shared/oldieshim.min.js -->
+  <!--[if lt IE 9]>
+  <script src = "bower_components/es5-shim/es5-shim.js"></script>
+  <script src="bower_components/json3/lib/json3.min.js"></script>
+  <![endif]-->
+  <!-- endbuild -->
+  <!-- build:js(.) shared/vendor.min.js -->
+  <!-- bower:js -->
+  <script src="bower_components/es5-shim/es5-shim.js"></script>
+  <script src="bower_components/jquery/jquery.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.js"></script>
+  <script src="bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="bower_components/angular-bootstrap-nav-tree/dist/abn_tree_directive.js"></script>
+  <script src="bower_components/chosen/chosen.jquery.min.js"></script>
+  <script src="bower_components/angular-chosen-localytics/chosen.js"></script>
+  <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+  <script src="bower_components/datatables.net/js/jquery.dataTables.js"></script>
+  <script src="bower_components/angular-datatables/dist/angular-datatables.min.js"></script>
+  <script src="bower_components/angular-datatables/dist/plugins/bootstrap/angular-datatables.bootstrap.min.js"></script>
+  <script src="bower_components/angular-datatables/dist/plugins/colreorder/angular-datatables.colreorder.min.js"></script>
+  <script src="bower_components/angular-datatables/dist/plugins/columnfilter/angular-datatables.columnfilter.min.js"></script>
+  <script src="bower_components/angular-datatables/dist/plugins/colvis/angular-datatables.colvis.min.js"></script>
+  <script src="bower_components/angular-datatables/dist/plugins/fixedcolumns/angular-datatables.fixedcolumns.min.js"></script>
+  <script src="bower_components/angular-datatables/dist/plugins/fixedheader/angular-datatables.fixedheader.min.js"></script>
+  <script src="bower_components/angular-datatables/dist/plugins/scroller/angular-datatables.scroller.min.js"></script>
+  <script src="bower_components/angular-datatables/dist/plugins/tabletools/angular-datatables.tabletools.min.js"></script>
+  <script src="bower_components/d3/d3.js"></script>
+  <script src="bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
+  <script src="bower_components/angular-flot/angular-flot.js"></script>
+  <script src="bower_components/angular-fontawesome/dist/angular-fontawesome.js"></script>
+  <script src="bower_components/angular-fullscreen/src/angular-fullscreen.js"></script>
+  <script src="bower_components/angular-simple-logger/dist/angular-simple-logger.js"></script>
+  <script src="bower_components/lodash/lodash.js"></script>
+  <script src="bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
+  <script src="bower_components/intro.js/intro.js"></script>
+  <script src="bower_components/angular-intro.js/src/angular-intro.js"></script>
+  <script src="bower_components/angular-ipsum/dist/ipsum.min.js"></script>
+  <script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
+  <script src="bower_components/masonry/dist/masonry.pkgd.min.js"></script>
+  <script src="bower_components/ev-emitter/ev-emitter.js"></script>
+  <script src="bower_components/imagesloaded/imagesloaded.js"></script>
+  <script src="bower_components/jquery-bridget/jquery-bridget.js"></script>
+  <script src="bower_components/angular-masonry/angular-masonry.js"></script>
+  <script src="bower_components/angular-aria/angular-aria.js"></script>
+  <script src="bower_components/angular-messages/angular-messages.js"></script>
+  <script src="bower_components/angular-material/angular-material.js"></script>
+  <script src="bower_components/moment/moment.js"></script>
+  <script src="bower_components/angular-momentjs/angular-momentjs.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
+  <script src="bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
+  <script src="bower_components/angular-touch/angular-touch.js"></script>
+  <script src="bower_components/angular-translate/angular-translate.js"></script>
+  <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+  <script src="bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js"></script>
+  <script src="bower_components/angular-translate-storage-local/angular-translate-storage-local.js"></script>
+  <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
+  <script src="bower_components/fullcalendar/fullcalendar.js"></script>
+  <script src="bower_components/angular-ui-calendar/src/calendar.js"></script>
+  <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
+  <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="bower_components/angular-ui-select/dist/select.js"></script>
+  <script src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
+  <script src="bower_components/angular-ui-utils/ui-utils.js"></script>
+  <script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+  <script src="bower_components/flot/jquery.flot.js"></script>
+  <script src="bower_components/flot/jquery.flot.resize.js"></script>
+  <script src="bower_components/flot-spline/js/jquery.flot.spline.min.js"></script>
+  <script src="bower_components/flot.tooltip/js/jquery.flot.tooltip.js"></script>
+  <script src="bower_components/html.sortable/dist/html.sortable.js"></script>
+  <script src="bower_components/jquery.easy-pie-chart/dist/angular.easypiechart.min.js"></script>
+  <script src="bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.js"></script>
+  <script src="bower_components/jquery.slimscroll/jquery.slimscroll.js"></script>
+  <script src="bower_components/jquery.slimscroll/jquery.slimscroll.min.js"></script>
+  <script src="bower_components/jquery.sparkline/index.js"></script>
+  <script src="bower_components/json3/lib/json3.js"></script>
+  <script src="bower_components/eve-raphael/eve.js"></script>
+  <script src="bower_components/raphael/raphael.min.js"></script>
+  <script src="bower_components/mocha/mocha.js"></script>
+  <script src="bower_components/morrisjs/morris.js"></script>
+  <script src="bower_components/ng-bs-daterangepicker/src/ng-bs-daterangepicker.js"></script>
+  <script src="bower_components/ng-table/dist/ng-table.js"></script>
+  <script src="bower_components/ng-tags-input/ng-tags-input.min.js"></script>
+  <script src="bower_components/ngImgCrop/compile/minified/ng-img-crop.js"></script>
+  <script src="bower_components/oclazyload/dist/ocLazyLoad.js"></script>
+  <script src="bower_components/owl.carousel/dist/owl.carousel.min.js"></script>
+  <script src="bower_components/dragular/dist/dragular.min.js"></script>
+  <script src="bower_components/magnific-popup/dist/jquery.magnific-popup.js"></script>
+  <script src="bower_components/angular-base64/angular-base64.js"></script>
+  <script src="bower_components/angular-google-chart/ng-google-chart.js"></script>
+  <script src="bower_components/angular-async-series/dist/angular-async-series.js"></script>
+  <script src="bower_components/textAngular/dist/textAngular-rangy.min.js"></script>
+  <script src="bower_components/textAngular/dist/textAngular-sanitize.min.js"></script>
+  <script src="bower_components/textAngular/dist/textAngular.min.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="bower_components/intl-tel-input/build/js/intlTelInput.js"></script>
+  <script src="bower_components/intl-tel-input/build/js/utils.js"></script>
+  <script src="bower_components/betsol-ng-intl-tel-input/dist/scripts/betsol-ng-intl-tel-input.js"></script>
+  <script src="bower_components/topojson/topojson.js"></script>
+  <script src="bower_components/datamaps/dist/datamaps.all.js"></script>
+  <script src="bower_components/angular-datamaps/dist/angular-datamaps.min.js"></script>
+  <script src="bower_components/chart.js/dist/Chart.js"></script>
+  <script src="bower_components/angular-chart.js/dist/angular-chart.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:js({.tmp,app}) shared/app.min.js -->
+  <script src="app.js"></script>
+  <script src="routes.js"></script>
+  <script src="shared/controllers/main.js"></script>
+  <script src="shared/controllers/nav.js"></script>
+  <script src="shared/controllers/daterangepicker.js"></script>
+  <script src="shared/controllers/forms-validate.js"></script>
+  <script src="shared/directives/loading.page.js"></script>
+  <script src="shared/directives/alertdisplay.js"></script>
+  <script src="shared/directives/image.base64.js"></script>
+  <script src="shared/directives/navcollapse.js"></script>
+  <script src="shared/directives/slimscroll.js"></script>
+  <script src="shared/directives/sparkline.js"></script>
+  <script src="shared/directives/collapsesidebar.js"></script>
+  <script src="shared/directives/ripple.js"></script>
+  <script src="shared/directives/pageloader.js"></script>
+  <script src="shared/directives/daterangepicker.js"></script>
+  <script src="shared/directives/tilecontrolclose.js"></script>
+  <script src="shared/directives/tilecontroltoggle.js"></script>
+  <script src="shared/directives/tilecontrolrefresh.js"></script>
+  <script src="shared/directives/tilecontrolfullscreen.js"></script>
+  <script src="shared/directives/prettyprint.js"></script>
+  <script src="shared/directives/lazymodel.js"></script>
+  <script src="shared/directives/activatebutton.js"></script>
+  <script src="shared/directives/setnganimate.js"></script>
+  <script src="shared/directives/onblurvalidation.js"></script>
+  <script src="shared/directives/formsubmit.js"></script>
+  <script src="shared/directives/check-toggler.js"></script>
+  <script src="shared/directives/chart-morris.js"></script>
+  <script src="shared/directives/gaugechart.js"></script>
+  <script src="shared/directives/wrap-owlcarousel.js"></script>
+  <script src="shared/directives/todofocus.js"></script>
+  <script src="shared/directives/todoescape.js"></script>
+  <script src="shared/directives/clock.js"></script>
+  <script src="shared/directives/active-toggle.js"></script>
+  <script src="shared/directives/vector-map.js"></script>
+  <script src="shared/directives/anchor-scroll.js"></script>
+  <script src="shared/directives/offcanvas-sidebar.js"></script>
+  <script src="shared/directives/submitvalidate.js"></script>
+  <script src="shared/directives/native-tab.js"></script>
+  <script src="shared/directives/tilecontrollightbox.js"></script>
+  <script src="shared/directives/common.js"></script>
+  <script src="components/login/login.service.js"></script>
+  <script src="components/forgot-pass/forgot-pass.service.js"></script>
+  <script src="components/reset/reset.service.js"></script>
+  <script src="components/header/header.controller.js"></script>
+  <script src="components/header/header.service.js"></script>
+  <script src="components/dashboard/dashboard.service.js"></script>
+  <script src="components/asset-info/asset-info.service.js"></script>
+  <script src="components/tenants/tenants.service.js"></script>
+  <script src="components/users/users.service.js"></script>
+  <script src="components/tickets/tickets.service.js"></script>
+  <script src="components/zones/zones.service.js"></script>
+  <script src="components/zone-info/zone-info.service.js"></script>
+  <script src="components/sensor/sensor.service.js"></script>
+  <script src="components/asset-types/asset-types.service.js"></script>
+  <script src="components/models/models.service.js"></script>
+  <script src="components/devices/devices.service.js"></script>
+  <script src="components/rules/advanced-rules/advancedrules.service.js"></script>
+  <script src="components/analytics/analytics.service.js"></script>
+  <!-- endbuild -->
+</body>
+
+</html>

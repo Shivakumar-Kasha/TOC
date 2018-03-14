@@ -1,0 +1,42 @@
+<div class="page page-forms-common">
+  <div ng-hide="hideMessage" class="text-center">
+    <p class="text-danger">{{ 'RESET_PASSWORD.ERROR.LINK_EXPIRED' | translate }}</p>
+  </div>
+  <div class="container w-420 p-15 bg-white mt-40" ng-hide="hideReset">
+    <div class="text-center">
+      <h3 class="text-light text-white"><img style="max-width: 100%;" src="images/vendor/logo-white.png" alt="{{ main.title }}"></h3>
+      <hr class="b-3x">
+      <h5 class="text-light brand-color"><strong>{{'LABELS.RESET_PASSWORD' | translate}}</strong></h5>
+    </div>
+    <form name="resetPasswordForm" ng-submit="submit()" role="form" novalidate>
+      <div ng-show={{show}}>
+        <div class="form-group col-md-12" ng-class="{ 'has-error' : resetPasswordForm.newPassword.$invalid && !resetPasswordForm.newPassword.$pristine, 'has-success' : resetPasswordForm.newPassword.$valid && !resetPasswordForm.newPassword.$pristine}" required>
+          <input type="password" name="newPassword" id="newPassword" placeholder="{{ ('PLACE_HOLDERS.ENTER_NEW_PASSWORD' | translate) + ' ' +  ('PLACE_HOLDERS.MANDATORY' | translate)}}" class="form-control underline-input" ng-model="reset.newPassword" ng-minlength="4"
+            ng-maxlength="50">
+          <p class="help-block">
+            <span ng-show="resetPasswordForm.newPassword.$error.minlength">{{'HELP_TEXT.PASSWORD_TOO_SHORT' | translate}}</span>
+            <span ng-show="resetPasswordForm.newPassword.$error.maxlength">{{'HELP_TEXT.PASSWORD_TOO_LONG' | translate}}</span>
+          </p>
+        </div>
+        <div class="form-group col-md-12" ng-class="{ 'has-error' : resetPasswordForm.passwordConfirm.$invalid && !resetPasswordForm.passwordConfirm.$pristine, 'has-success' : resetPasswordForm.passwordConfirm.$valid && !resetPasswordForm.passwordConfirm.$pristine}"
+          required>
+          <input type="password" name="passwordConfirm" id="passwordConfirm" placeholder="{{ ('PLACE_HOLDERS.CONFIRM_NEW_PASSWORD' | translate) + ' ' +  ('PLACE_HOLDERS.MANDATORY' | translate)}}" class="form-control underline-input" ng-model="reset.passwordConfirm"
+            ng-minlength="4" ng-maxlength="50" ui-validate=" '$value==reset.newPassword' " ui-validate-watch=" 'reset.newPassword' ">
+          <p class="help-block">
+            <span ng-show='resetPasswordForm.passwordConfirm.$error.validator'>{{'HELP_TEXT.PASSWORD_NOT_MATCH' | translate}}</span>
+            <span ng-show="resetPasswordForm.passwordConfirm.$error.minlength">{{'HELP_TEXT.PASSWORD_TOO_SHORT' | translate}}</span>
+            <span ng-show="resetPasswordForm.passwordConfirm.$error.maxlength">{{'HELP_TEXT.PASSWORD_TOO_LONG' | translate}}</span>
+          </p>
+        </div>
+        <div class="form-group text-left mt-20">
+          <button class="btn btn-lightred b-0 br-2 mr-5" ng-click="resetFields()"> {{'BUTTONS.CLEAR' | translate}}</button>
+          <button type="submit" class="btn btn-brand-color b-0 br-2 mr-5 pull-right" ng-click="resetPassword()" ng-disabled="resetPasswordForm.$invalid">{{'BUTTONS.RESET' | translate}}</button>
+        </div>
+      </div>
+      <hr class="b-3x">
+      <div class="lt wrap-reset text-center">
+        <b class="text-black"> © {{copyrightYear}} <a onclick="window.open('//kii.com/')" title="" style="cursor: pointer;">Kii</a>. {{'HELP_TEXT.ALL_RIGHTS_RESERVED' | translate}}</b>
+      </div>
+    </form>
+  </div>
+</div>

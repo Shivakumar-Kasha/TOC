@@ -1,0 +1,66 @@
+<!--
+@Date: 02-16-2017 11:02:19
+@Project: Asset Monitroing
+@Last modified time: 04-18-2017 20:04:52
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<section class="tile tile-simple table-custom mb-0" ng-controller="AssetInfoCtrl">
+  <div class="modal-body form-horizontal">
+    <div class="form-group">
+
+      <div class="row">
+        <div class="col-sm-4">
+          <label><strong>{{'LABELS.ID' | translate}}: </strong></label>
+          <p class="">{{assetId}}</p>
+        </div>
+        <div class="col-sm-4">
+          <label><strong>{{'LABELS.NAME' | translate}}: </strong></label>
+          <p class="">{{assetsName}}</p>
+        </div>
+        <div class="col-sm-4">
+          <label><strong>{{'LABELS.ADDRESS' | translate}}:  </strong></label>
+          <!-- <a style="float:right;" href ng-click="resetLocation()" ng-show="showForMovementSensor"><i class="fa fa-map-marker "></i> &nbsp;Update Base Location</a> -->
+          <p class="">{{assetLocation}}</p>
+        </div>
+        <div class="col-sm-4">
+          <label><strong>{{ 'LABELS.STATUS' | translate }}: </strong></label>
+          <br>
+          <p title="{{assetStatus}}" class="inline-text {{assetStatusClass}}">{{assetStatus}}</p>
+        </div>
+        <div class="col-sm-4" ng-repeat="item in data">
+          <div id="{{item.id}}" ng-init="init(item.value)">
+            <label class="capitalize"><strong>{{item.label}}:</strong></label> {{propertiesData(item)}}
+            <p>{{propertyValue}}</p>
+          </div>
+        </div>
+
+        <div class="col-sm-4" ng-show={{showTenant}}>
+          <label><strong>{{ 'LABELS.ZONE' | translate }}: </strong></label>
+          <p class="">{{zoneName}}</p>
+        </div>
+
+      </div>
+      <hr class="line-dashed line-half" />
+      <div class="table-responsive ">
+        <table width="100% " datatable=" " dt-options="assetInfo.dtOptions " dt-columns="assetInfo.dtColumns " dt-instance="assetInfo.dtInstance " class="table table-custom ">
+          <thead>
+            <tr>
+              <th>{{'LABELS.DEVICE_ID' | translate}}</th>
+              <th>{{'LABELS.DEVICE_NAME' | translate}}</th>
+              <th>{{'LABELS.SENSOR_ID' | translate}}</th>
+              <th>{{'LABELS.SENSOR_NAME' | translate}}</th>
+              <!-- <th>{{'LABELS.SENSOR_TYPE' | translate}}</th> -->
+              <th>{{'LABELS.CURRENT_READING' | translate}}</th>
+              <th>{{'LABELS.UPDATED_AT' | translate}}</th>
+              <!-- <th class="text-center">{{'LABELS.TREND' | translate}} {{'LABELS.CHART' | translate}}</th> -->
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</section>

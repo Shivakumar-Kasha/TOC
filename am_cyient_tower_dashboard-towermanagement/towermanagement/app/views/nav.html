@@ -1,0 +1,97 @@
+<!--
+@Date:   01-27-2017 12:01:32
+@Project:Asset Monitoring
+@Last modified time: 04-20-2017 10:04:55
+@Copyright: 2017, Kii Corporation www.kii.com
+-->
+
+<!-- <div class="text-center">
+  <p style="margin: 10px 0px 10px 0px;"><span><img style="max-width: 100%; max-height: 95px; background-color: transparent !important;" src="images/vendor/gray-logo.png" alt="{{ main.title }}"></p></span>
+</div> -->
+<div class="text-center" style="background-color: white;">
+  <p style="margin: 5px 0px 5px 0px;"><span><img style="max-width: 100%; max-height: 95px; background-color: White  !important;" src="images/vendor/Cyient_logo.png" alt="{{ brandName }}"></p></span>
+</div>
+
+<!-- Branding -->
+<!-- <div class="branding">
+  <a class="brand" style="margin: 50px 0px 50px 0px; background: url(../images/vendor/logo.png) no-repeat">
+    <span style="margin: 20px 0px 20px 0px;"><img style="max-width: 100%; max-height: 95px; background-color: transparent !important;" src="images/vendor/vendor.png" alt="{{ main.title }}"></span>
+  </a>
+</div> -->
+<!-- Branding end -->
+<div id="sidebar-wrap" class="{{main.settings.sidebarColor}}" style="height: 100%;">
+  <uib-accordion close-others="oneAtTime" slimscroll="{height: '100%'}">
+    <uib-accordion-group is-open="true">
+      <uib-accordion-heading>
+        {{'LABELS.NAVIGATION' | translate}} <i class="pull-right fa" ng-class="{'fa-angle-up': status.isFirstOpen, 'fa-angle-down': !status.isFirstOpen}"></i>
+      </uib-accordion-heading>
+      <ul id="navigation">
+        <li ui-sref-active="active">
+          <a ui-sref="app.dashboard">
+            <fa name="home"></fa> <span>{{ 'Menu.DASHBOARD' | translate }}</span></a>
+        </li>
+        <li ng-show="{{showMaster}}" ui-sref-active="active">
+          <a ui-sref="app.tenants">
+            <fa name="cubes"></fa> <span>{{ 'Menu.TENANTS' | translate }}</span></a>
+        </li>
+        <li ng-show="{{showTenant}}" ui-sref-active="active">
+          <a ui-sref="app.zones">
+            <fa name="map-marker"></fa> <span>{{ 'Menu.ZONES' | translate }}</span></a>
+        </li>
+        <li ng-show="{{showTenant}}" ui-sref-active="active">
+          <a ui-sref="app.alerts">
+            <fa name="bell"></fa> <span>{{ 'Menu.ALERTS' | translate }}</span></a>
+        </li>
+        <li ng-show="{{showTenant}}" ui-sref-active="active">
+          <a ui-sref="app.advancedrules">
+            <fa name="list"></fa> <span>{{ 'Menu.BUSINESS_RULES' | translate }}</span></a>
+        </li>
+        <!-- Disable AssetTypes  -->
+        <!-- <li ng-show="{{showMaster}}" ui-sref-active="active">
+          <a ui-sref="app.sensor">
+            <fa name="pencil-square-o"></fa> <span>{{ 'Menu.SENSOR' | translate }}</span></a>
+        </li> -->
+        <li ng-show="{{showMaster}}" ui-sref-active="active">
+          <a ui-sref="app.devices">
+            <fa name="microchip"></fa> <span>{{ 'Menu.Devices' | translate }}</span></a>
+        </li>
+
+        <li ng-show="{{showMaster}}" ui-sref-active="active">
+          <a ui-sref="app.tickets" ng-click="allTickets('all')">
+            <fa name="ticket"></fa> <span>{{ 'Menu.TICKETS' | translate }}</span></a>
+        </li>
+
+        <li ng-show="{{showMaster}}" ui-sref-active="active">
+          <a ui-sref="app.models">
+            <fa name="building"></fa> <span>{{ 'Menu.MODELS' | translate }}</span></a>
+        </li>
+
+        <li ui-sref-active="active">
+          <a ui-sref="app.analytics">
+            <fa name="bar-chart"></fa> <span>{{ 'Menu.ANALYTICS' | translate }}</span></a>
+        </li>
+        <li ng-show="{{showTenant}}" ui-sref-active="active">
+          <a ui-sref="app.tenant-users">
+            <fa name="users"></fa> <span>{{ 'Menu.USERS' | translate }}</span></a>
+        </li>
+
+        <li ng-show="{{showMaster}}" ui-sref-active="active">
+          <a ui-sref="app.users">
+            <fa name="users"></fa> <span>{{ 'Menu.USERS' | translate }}</span></a>
+        </li>
+        <li ng-show="{{showMaster}}" ui-sref-active="active">
+          <a ui-sref="app.configuration">
+            <fa name="cogs"></fa> <span>{{ 'Menu.CONFIGURATION' | translate }}</span></a>
+        </li>
+        <li ng-show="{{showMaster}}" ui-sref-active="active">
+          <a ui-sref="app.configuration">
+            <fa name="files-o"></fa> <span>{{ 'Menu.RECORDSMANAGEMENT' | translate }}</span></a>
+        </li>
+        <li ng-show="{{showMaster}}" ui-sref-active="active">
+          <a ui-sref="app.configuration">
+            <fa name="wrench"></fa> <span>{{ 'Menu.WORKFORCEMANAGEMENT' | translate }}</span></a>
+        </li>
+      </ul>
+    </uib-accordion-group>
+  </uib-accordion>
+</div>
